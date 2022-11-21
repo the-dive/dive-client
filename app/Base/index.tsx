@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from '#views/Home';
 import Login from '#views/Login';
+import Data from '#views/Data';
 
 import RootLayout from './layouts/RootLayout';
 import ProtectedLayout from './layouts/ProtectedLayout';
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
                 element: <ProtectedLayout />,
                 children: [
                     { index: true, element: <Home /> },
+                    {
+                        path: '/data',
+                        element: <Data />,
+                    },
                 ],
             },
             {
