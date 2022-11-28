@@ -6,6 +6,7 @@ import Data from '#views/Data';
 import RootLayout from './layouts/RootLayout';
 import ProtectedLayout from './layouts/ProtectedLayout';
 import ErrorPage from './components/ErrorPage';
+import ThemeProvider from './ThemeProvider';
 
 const router = createBrowserRouter([
     {
@@ -34,7 +35,9 @@ const router = createBrowserRouter([
 
 function Base() {
     return (
-        <RouterProvider router={router} />
+        <ThemeProvider>
+            <RouterProvider router={router} />
+        </ThemeProvider>
     );
 }
 
