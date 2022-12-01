@@ -1,11 +1,17 @@
+import { AppShell, Header } from '@mantine/core';
 import { Outlet } from 'react-router-dom';
-import styles from './styles.module.css';
 
 function ProtectedLayout() {
     return (
-        <div className={styles.protectedLayout}>
+        <AppShell
+            padding="md"
+            header={<Header height={60} p="xs">{/* Header content */}</Header>}
+            styles={(theme) => ({
+                main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
+            })}
+        >
             <Outlet />
-        </div>
+        </AppShell>
     );
 }
 
