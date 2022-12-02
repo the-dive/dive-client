@@ -39,6 +39,6 @@
             }
         }]
     },
-    "include": ["app", "vite.config.ts", ".eslintrc.cjs", "stylelint.config.cjs", "postcss.config.cjs", "lintstagedrc.cjs"],
+    "include": ["app", "vite.config.ts", ".eslintrc.cjs", "stylelint.config.cjs", "postcss.config.cjs", "lintstagedrc.cjs", "codegen.ts"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

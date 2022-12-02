@@ -1,4 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { cacheExchange, createClient, dedupExchange, fetchExchange, Provider } from 'urql';
+import { devtoolsExchange } from '@urql/devtools';
+
 import Home from '#views/Home';
 import Login from '#views/Login';
 import Data from '#views/Data';
@@ -33,10 +36,17 @@ const router = createBrowserRouter([
     },
 ]);
 
+const client = createClient({
+    url: import.meta.env.VITE_GRAPHQL_API_ENDPOINT,
+    exchanges: [devtoolsExchange, dedupExchange, cacheExchange, fetchExchange],
+});
+
 function Base() {
     return (
         <ThemeProvider>
-            <RouterProvider router={router} />
+            <Provider value={client}>
+                <RouterProvider router={router} />
+            </Provider>
         </ThemeProvider>
     );
 }

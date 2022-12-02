@@ -3,5 +3,6 @@
         "antfu.vite",
         "csstools.postcss",
         "dbaeumer.vscode-eslint",
+        "GraphQL.vscode-graphql",
     ]
 }
