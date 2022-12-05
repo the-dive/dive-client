@@ -13,4 +13,13 @@
         padding: var(--mantine-spacing-md);
         max-width: 250px;
     }
+
+    .mantine-Modal-body {
+        .grid-modal {
+            .grid-column {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
 }
