@@ -14,3 +14,7 @@
         max-width: 250px;
     }
 }
+
+.paper {
+    cursor: pointer;
+}
