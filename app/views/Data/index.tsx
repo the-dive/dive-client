@@ -1,4 +1,4 @@
-import { Navbar, Container, Button } from '@mantine/core';
+import { Navbar, Card, Button, Text } from '@mantine/core';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import styles from './styles.module.css';
 
@@ -6,10 +6,10 @@ export default function Data() {
     return (
         <div className={styles.dataPage}>
             <Navbar p="xs" width={{ sm: 200, lg: 300, base: 200 }}>{/* Navbar content */}</Navbar>
-            <Container className={styles.dropZone}>
-                <div className={styles.dropText}>
+            <Card className={styles.dropZone} withBorder>
+                <Text fz="sm" ta="center">
                     Drag and drop a file or import from your computer
-                </div>
+                </Text>
                 <Button
                     variant="filled"
                     uppercase
@@ -19,7 +19,7 @@ export default function Data() {
                 >
                     Import
                 </Button>
-            </Container>
+            </Card>
         </div>
     );
 }
