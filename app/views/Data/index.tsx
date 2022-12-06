@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navbar, Card, Button, Modal, Grid, FileButton, Text } from '@mantine/core';
+import { Navbar, Card, Button, Modal, Grid, FileButton, Text, Image } from '@mantine/core';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import styles from './styles.module.css';
 
@@ -34,57 +34,101 @@ export default function Data() {
                 <Grid
                     className={styles.gridModal}
                     gutter="xl"
-                    align="center"
                     justify="center"
+                    align="center"
                 >
-                    <Grid.Col
-                        span={4}
-                        className={styles.gridColumn}
-                    >
-                        <img src="./assets/txt.svg" alt="" />
-                        Text
-                    </Grid.Col>
-                    <FileButton onChange={setFile} accept="image/png">
-                        {() => (
+                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
+                        {(props) => (
                             <Grid.Col
+                                {...props}
                                 span={4}
                                 className={styles.gridColumn}
                             >
-                                <img src="./assets/excel.svg" alt="" />
-                                Excel
+                                <Image src="./assets/txt.svg" alt="" />
+                                <Text fz="sm" ta="center">
+                                    Text
+                                </Text>
                             </Grid.Col>
                         )}
                     </FileButton>
-                    <Grid.Col
-                        span={4}
-                        className={styles.gridColumn}
-                    >
-                        <img src="./assets/json.svg" alt="" />
-                        JSON
-                    </Grid.Col>
-                    <Grid.Col
-                        span={4}
-                        className={styles.gridColumn}
-                    >
-                        <img src="./assets/log.svg" alt="" />
-                        Log file
-                    </Grid.Col>
-                    <Grid.Col
-                        span={4}
-                        className={styles.gridColumn}
-                    >
-                        <img src="./assets/stats.svg" alt="" />
-                        Stats file
-                    </Grid.Col>
-                    <Grid.Col
-                        span={4}
-                        className={styles.gridColumn}
-                    >
-                        <img src="./assets/kobo.svg" alt="" />
-                        Kobo
-                    </Grid.Col>
+                    <FileButton onChange={setFile} accept="image/png,image/jpeg">
+                        {(props) => (
+                            <Grid.Col
+                                span={4}
+                                {...props}
+                                className={styles.gridColumn}
+                            >
+                                <Image src="./assets/excel.svg" alt="" />
+                                <Text fz="sm" ta="center">
+                                    Excel
+                                </Text>
+                            </Grid.Col>
+                        )}
+                    </FileButton>
+                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
+                        {(props) => (
+                            <Grid.Col
+                                span={4}
+                                {...props}
+                                className={styles.gridColumn}
+                            >
+                                <Image src="./assets/json.svg" alt="" />
+                                <Text fz="sm" ta="center">
+                                    JSON
+                                </Text>
+                            </Grid.Col>
+                        )}
+                    </FileButton>
+                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
+                        {(props) => (
+                            <Grid.Col
+                                span={4}
+                                {...props}
+                                className={styles.gridColumn}
+                            >
+                                <Image src="./assets/log.svg" alt="" />
+                                <Text fz="sm" ta="center">
+                                    Log file
+                                </Text>
+                            </Grid.Col>
+                        )}
+                    </FileButton>
+                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
+                        {(props) => (
+                            <Grid.Col
+                                span={4}
+                                {...props}
+                                className={styles.gridColumn}
+                            >
+                                <Image src="./assets/stats.svg" alt="" />
+                                <Text fz="sm" ta="center">
+                                    Stats file
+                                </Text>
+                            </Grid.Col>
+                        )}
+                    </FileButton>
+                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
+                        {(props) => (
+                            <Grid.Col
+                                span={4}
+                                {...props}
+                                className={styles.gridColumn}
+                            >
+                                <Image src="./assets/kobo.svg" alt="" />
+                                <Text fz="sm" ta="center">
+                                    KoBo
+                                </Text>
+                            </Grid.Col>
+                        )}
+                    </FileButton>
                 </Grid>
             </Modal>
+            {file && (
+                <div>
+                    {file.name}
+                    {file.type}
+                </div>
+            )}
         </div>
     );
 }
