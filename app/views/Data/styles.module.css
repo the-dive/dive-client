@@ -13,15 +13,8 @@
         padding: var(--mantine-spacing-md);
         max-width: 250px;
     }
+}
 
-    .mantine-Modal-body {
-        .grid-modal {
-            .grid-column {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-        }
-    }
+.paper {
+    cursor: pointer;
 }

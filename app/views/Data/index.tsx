@@ -1,16 +1,40 @@
-import { useState } from 'react';
-import { Navbar, Card, Button, Modal, Grid, FileButton, Text, Image } from '@mantine/core';
+import { useState, useCallback } from 'react';
+import {
+    Button,
+    Paper,
+    FileButton,
+    Image,
+    Modal,
+    SimpleGrid,
+    Text,
+    Title,
+    Navbar,
+} from '@mantine/core';
 import { MdOutlineFileUpload } from 'react-icons/md';
+
 import styles from './styles.module.css';
 
 export default function Data() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [file, setFile] = useState<File | null>(null);
 
+    const handleModalOpen = useCallback(() => {
+        setIsModalOpen(true);
+    }, []);
+
+    const handleModalClose = useCallback(() => {
+        setIsModalOpen(false);
+    }, []);
+
     return (
         <div className={styles.dataPage}>
-            <Navbar p="xs" width={{ sm: 200, lg: 300, base: 200 }}>{/* Navbar content */}</Navbar>
-            <Card className={styles.dropZone} withBorder>
+            <Navbar
+                p="xs"
+                width={{ sm: 200, lg: 300, base: 200 }}
+            >
+                {/* Navbar content */}
+            </Navbar>
+            <Paper className={styles.dropZone} withBorder>
                 <Text fz="sm" ta="center">
                     Drag and drop a file or import from your computer
                 </Text>
@@ -20,108 +44,136 @@ export default function Data() {
                     leftIcon={<MdOutlineFileUpload />}
                     size="xs"
                     radius="xl"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={handleModalOpen}
                 >
                     Import
                 </Button>
-            </Card>
+            </Paper>
             <Modal
                 opened={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title="Import"
+                onClose={handleModalClose}
+                title={(
+                    <Title order={4}>
+                        Import
+                    </Title>
+                )}
+                radius="md"
+                size="sm"
                 centered
             >
-                <Grid
-                    className={styles.gridModal}
-                    gutter="xl"
-                    justify="center"
-                    align="center"
+                <SimpleGrid
+                    cols={3}
+                    spacing="sm"
+                    verticalSpacing="sm"
                 >
-                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
-                        {(props) => (
-                            <Grid.Col
-                                {...props}
-                                span={4}
-                                className={styles.gridColumn}
+                    <FileButton
+                        disabled
+                        onChange={setFile}
+                        accept="text/plain"
+                    >
+                        {({ onClick }) => (
+                            <Paper
+                                className={styles.paper}
+                                withBorder
+                                onClick={onClick}
                             >
-                                <Image src="./assets/txt.svg" alt="" />
+                                <Image src="./assets/txt.svg" alt="Text file" />
                                 <Text fz="sm" ta="center">
-                                    Text
+                                    Text file
                                 </Text>
-                            </Grid.Col>
+                            </Paper>
                         )}
                     </FileButton>
-                    <FileButton onChange={setFile} accept="image/png,image/jpeg">
-                        {(props) => (
-                            <Grid.Col
-                                span={4}
-                                {...props}
-                                className={styles.gridColumn}
+                    <FileButton
+                        onChange={setFile}
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                    >
+                        {({ onClick }) => (
+                            <Paper
+                                className={styles.paper}
+                                withBorder
+                                onClick={onClick}
                             >
-                                <Image src="./assets/excel.svg" alt="" />
+                                <Image src="./assets/excel.svg" alt="Excel" />
                                 <Text fz="sm" ta="center">
                                     Excel
                                 </Text>
-                            </Grid.Col>
+                            </Paper>
                         )}
                     </FileButton>
-                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
-                        {(props) => (
-                            <Grid.Col
-                                span={4}
-                                {...props}
-                                className={styles.gridColumn}
+                    <FileButton
+                        disabled
+                        onChange={setFile}
+                        accept="application/json"
+                    >
+                        {({ onClick }) => (
+                            <Paper
+                                className={styles.paper}
+                                withBorder
+                                onClick={onClick}
                             >
-                                <Image src="./assets/json.svg" alt="" />
+                                <Image src="./assets/json.svg" alt="Json" />
                                 <Text fz="sm" ta="center">
                                     JSON
                                 </Text>
-                            </Grid.Col>
+                            </Paper>
                         )}
                     </FileButton>
-                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
-                        {(props) => (
-                            <Grid.Col
-                                span={4}
-                                {...props}
-                                className={styles.gridColumn}
+                    <FileButton
+                        disabled
+                        onChange={setFile}
+                        accept="*.log"
+                    >
+                        {({ onClick }) => (
+                            <Paper
+                                className={styles.paper}
+                                withBorder
+                                onClick={onClick}
                             >
-                                <Image src="./assets/log.svg" alt="" />
+                                <Image src="./assets/log.svg" alt="Log" />
                                 <Text fz="sm" ta="center">
                                     Log file
                                 </Text>
-                            </Grid.Col>
+                            </Paper>
                         )}
                     </FileButton>
-                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
-                        {(props) => (
-                            <Grid.Col
-                                span={4}
-                                {...props}
-                                className={styles.gridColumn}
+                    <FileButton
+                        disabled
+                        onChange={setFile}
+                        accept="text/plain"
+                    >
+                        {({ onClick }) => (
+                            <Paper
+                                className={styles.paper}
+                                withBorder
+                                onClick={onClick}
                             >
-                                <Image src="./assets/stats.svg" alt="" />
+                                <Image src="./assets/stats.svg" alt="Stats" />
                                 <Text fz="sm" ta="center">
                                     Stats file
                                 </Text>
-                            </Grid.Col>
+                            </Paper>
                         )}
                     </FileButton>
-                    <FileButton disabled onChange={setFile} accept="image/png,image/jpeg">
-                        {(props) => (
-                            <Grid.Col
-                                span={4}
-                                {...props}
-                                className={styles.gridColumn}
+                    <FileButton
+                        disabled
+                        onChange={setFile}
+                        accept="text/plain"
+                    >
+                        {({ onClick }) => (
+                            <Paper
+                                className={styles.paper}
+                                withBorder
+                                onClick={onClick}
                             >
-                                <Image src="./assets/kobo.svg" alt="" />
+                                <Image src="./assets/kobo.svg" alt="Kobo" />
                                 <Text fz="sm" ta="center">
                                     KoBo
                                 </Text>
-                            </Grid.Col>
+                            </Paper>
                         )}
                     </FileButton>
-                </Grid>
+                </SimpleGrid>
             </Modal>
             {file && (
                 <div>
