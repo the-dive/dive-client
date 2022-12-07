@@ -1,34 +1,9 @@
-### Development
-Install all project dependencies
+## Pull Request
+1. Fork the project and clone it
+2. Installation dependency: `pnpm install` or `pnpm`
+3. Commit your changes, and please follow [Commitlint Git Commit Message Conventions] (<https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional>)
 
-```
-pnpm install
-```
-
-Create a `.env.local` file and copy all values from `.env.example` and add all necessary entries
-
-```
-VITE_GRAPHQL_API_ENDPOINT=http://localhost:8000/graphql/
-```
-
-Just run and visit http://localhost:5173
-
-```bash
-pnpm dev
-```
-
-### Build
-
-To build the App, run
-
-```bash
-pnpm build
-```
-To preview the build
-```bash
-pnpm preview
-```
-### Scripts
+## Development Process
 
 - `pnpm dev` - start a development server with hot reload
 - `pnpm build` - build for production. The generated files will be on the `dist` folder
