@@ -13,7 +13,10 @@
     "typecheck": "tsc",
     "stylelint": "stylelint --cache --fix --ignore-path .gitignore **/*.css",
     "test": "vitest",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen-esm --require dotenv/config --config codegen.yml dotenv_config_path=./.env.local",
+    "prebuild": "pnpm codegen",
+    "prestart": "pnpm codegen",
+    "pretypecheck": "yarn initialize"
   },
   "dependencies": {
     "@babel/core": ">=7.0.0 <8.0.0",

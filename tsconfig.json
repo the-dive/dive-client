@@ -13,8 +13,8 @@
         "allowSyntheticDefaultImports": true,
         "strict": true,
         "forceConsistentCasingInFileNames": true,
-        "module": "ESNext",
-        "moduleResolution": "Node",
+        "module": "Node16",
+        "moduleResolution": "Node16",
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
@@ -25,7 +25,7 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "paths": {
-            "#generated/*": ["./generated/*"],
+            "#gql/*": ["./gql/*"],
             "#components/*": ["./app/components/*"],
             "#utils/*": ["./app/utils/*"],
             "#views/*": ["./app/views/*"],
@@ -39,6 +39,6 @@
             }
         }]
     },
-    "include": ["app", "vite.config.ts", ".eslintrc.cjs", "stylelint.config.cjs", "postcss.config.cjs", "lintstagedrc.cjs", "codegen.ts"],
+    "include": ["app", "vite.config.ts", ".eslintrc.cjs", "stylelint.config.cjs", "postcss.config.cjs", "lintstagedrc.cjs"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
