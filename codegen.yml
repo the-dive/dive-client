@@ -1,0 +1,13 @@
+schema: ${VITE_GRAPHQL_API_ENDPOINT}
+overwrite: true
+documents: "src/**/*.tsx"
+emitLegacyCommonJSImports: false
+ignoreNoDocuments: true
+generates:
+    ./gql/:
+        preset: "client"
+        plugins: []
+        config:
+            arrayInputCoercion: false
+            enumsAsTypes: true
+            skipTypename: true

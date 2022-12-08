@@ -13,7 +13,11 @@
     "typecheck": "tsc",
     "stylelint": "stylelint --cache --fix --ignore-path .gitignore **/*.css",
     "test": "vitest",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen-esm --require dotenv/config --config codegen.yml dotenv_config_path=./.env.local",
+    "prebuild": "pnpm codegen",
+    "prestart": "pnpm codegen",
+    "pretypecheck": "pnpm codegen",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@babel/core": ">=7.0.0 <8.0.0",
@@ -33,6 +37,8 @@
     "vite-plugin-svgr": "^2.2.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
     "@graphql-codegen/cli": "2.15.0",
     "@graphql-codegen/client-preset": "1.2.0",
     "@graphql-eslint/eslint-plugin": "^3.13.1",
@@ -55,6 +61,7 @@
     "eslint-plugin-postcss-modules": "^2.0.0",
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.0",
     "pnpm": "^7.12.1",
     "postcss": "^8.4.16",
     "postcss-nested": "^5.0.6",

@@ -14,6 +14,9 @@ dist-ssr
 
 .env
 
+#graphql-codegen generated files
+/gql
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -25,7 +25,7 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "paths": {
-            "#generated/*": ["./generated/*"],
+            "#gql/*": ["./gql/*"],
             "#components/*": ["./app/components/*"],
             "#utils/*": ["./app/utils/*"],
             "#views/*": ["./app/views/*"],
@@ -39,6 +39,6 @@
             }
         }]
     },
-    "include": ["app", "vite.config.ts", ".eslintrc.cjs", "stylelint.config.cjs", "postcss.config.cjs", "lintstagedrc.cjs", "codegen.ts"],
+    "include": ["app", "vite.config.ts", ".eslintrc.cjs", "stylelint.config.cjs", "postcss.config.cjs", "lintstagedrc.cjs", "commitlint.config.cjs"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }
