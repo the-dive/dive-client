@@ -111,7 +111,7 @@ export default function Upload() {
                                 withBorder
                                 onClick={onClick}
                             >
-                                <Image src="./assets/txt.svg" alt="Text file" />
+                                <Image src="/assets/txt.svg" alt="Text file" />
                                 <Text fz="sm" ta="center">
                                     Text file
                                 </Text>
@@ -129,7 +129,7 @@ export default function Upload() {
                                 withBorder
                                 onClick={onClick}
                             >
-                                <Image src="./assets/excel.svg" alt="Excel" />
+                                <Image src="/assets/excel.svg" alt="Excel" />
                                 <Text fz="sm" ta="center">
                                     Excel
                                 </Text>
@@ -147,7 +147,7 @@ export default function Upload() {
                                 withBorder
                                 onClick={onClick}
                             >
-                                <Image src="./assets/json.svg" alt="Json" />
+                                <Image src="/assets/json.svg" alt="Json" />
                                 <Text fz="sm" ta="center">
                                     JSON
                                 </Text>
@@ -165,7 +165,7 @@ export default function Upload() {
                                 withBorder
                                 onClick={onClick}
                             >
-                                <Image src="./assets/log.svg" alt="Log" />
+                                <Image src="/assets/log.svg" alt="Log" />
                                 <Text fz="sm" ta="center">
                                     Log file
                                 </Text>
@@ -183,7 +183,7 @@ export default function Upload() {
                                 withBorder
                                 onClick={onClick}
                             >
-                                <Image src="./assets/stats.svg" alt="Stats" />
+                                <Image src="/assets/stats.svg" alt="Stats" />
                                 <Text fz="sm" ta="center">
                                     Stats file
                                 </Text>
@@ -201,7 +201,7 @@ export default function Upload() {
                                 withBorder
                                 onClick={onClick}
                             >
-                                <Image src="./assets/kobo.svg" alt="Kobo" />
+                                <Image src="/assets/kobo.svg" alt="Kobo" />
                                 <Text fz="sm" ta="center">
                                     KoBo
                                 </Text>
