@@ -1,0 +1,222 @@
+type CreateFile {
+  errors: [GenericScalar!]
+  ok: Boolean
+  result: FileType
+}
+
+input CreateFileInputType {
+  file: Upload!
+  fileType: FileTypeEnum!
+}
+
+type DatasetListType {
+  """Page Number"""
+  page: Int
+
+  """Page Size"""
+  pageSize: Int
+  results: [DatasetType!]
+
+  """Total count of matches elements"""
+  totalCount: Int
+}
+
+"""An enumeration."""
+enum DatasetStatus {
+  """Extracted"""
+  EXTRACTED
+
+  """Pending"""
+  PENDING
+
+  """Uploaded"""
+  UPLOADED
+}
+
+type DatasetType {
+  """"""
+  createdAt: DateTime!
+
+  """"""
+  error: String
+
+  """"""
+  extraData: JSONString!
+
+  """"""
+  fileSizeBytes: Int!
+
+  """"""
+  fileUrl: String!
+
+  """"""
+  hasErrored: Boolean!
+
+  """"""
+  id: ID!
+
+  """"""
+  metadata: JSONString!
+
+  """"""
+  modifiedAt: DateTime!
+
+  """"""
+  name: String!
+
+  """"""
+  status: DatasetStatus!
+  tables: [TableType!]
+}
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+"""
+The `EnumDescription` scalar type represents of Enum description data, represented as UTF-8
+character sequences. The String type is most often used by GraphQL to
+represent free-form human-readable text.
+"""
+scalar EnumDescription
+
+"""An enumeration."""
+enum FileFileType {
+  """Csv"""
+  CSV
+
+  """Excel"""
+  EXCEL
+
+  """Json"""
+  JSON
+
+  """Text"""
+  TEXT
+}
+
+type FileListType {
+  """Page Number"""
+  page: Int
+
+  """Page Size"""
+  pageSize: Int
+  results: [FileType!]
+
+  """Total count of matches elements"""
+  totalCount: Int
+}
+
+type FileType {
+  """"""
+  file: String!
+
+  """"""
+  fileType: FileFileType!
+
+  """"""
+  id: ID!
+}
+
+enum FileTypeEnum {
+  """Csv"""
+  CSV
+
+  """Excel"""
+  EXCEL
+
+  """Json"""
+  JSON
+
+  """Text"""
+  TEXT
+}
+
+"""
+The `GenericScalar` scalar type represents a generic
+GraphQL scalar value that could be:
+String, Boolean, Int, Float, List or Object.
+"""
+scalar GenericScalar
+
+"""
+Allows use of a JSON String for input / output from the GraphQL schema.
+
+Use of this type is *not recommended* as you lose the benefits of having a defined, static
+schema (one of the key benefits of GraphQL).
+"""
+scalar JSONString
+
+type Mutation {
+  createFile(data: CreateFileInputType!): CreateFile
+}
+
+type Query {
+  dataset(
+    """Django object unique identification field"""
+    id: ID!
+  ): DatasetType
+
+  """Dataset list"""
+  datasets(
+    """
+    A string or comma delimited string values that indicate the default ordering when obtaining lists of objects.
+    """
+    ordering: String
+
+    """A page number within the result paginated set. Default: 1"""
+    page: Int = 1
+
+    """Number of results to return per page. Default 'page_size': 20"""
+    pageSize: Int
+    search: String
+  ): DatasetListType
+  file(
+    """Django object unique identification field"""
+    id: ID!
+  ): FileType
+
+  """File list"""
+  files(
+    """
+    A string or comma delimited string values that indicate the default ordering when obtaining lists of objects.
+    """
+    ordering: String
+
+    """A page number within the result paginated set. Default: 1"""
+    page: Int = 1
+
+    """Number of results to return per page. Default 'page_size': 20"""
+    pageSize: Int
+  ): FileListType
+}
+
+"""An enumeration."""
+enum TableStatus {
+  """Extracted"""
+  EXTRACTED
+
+  """Pending"""
+  PENDING
+}
+
+type TableType {
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  status: TableStatus!
+  statusDisplay: EnumDescription
+}
+
+"""
+Create scalar that ignores normal serialization/deserialization, since
+that will be handled by the multipart request spec
+"""
+scalar Upload
