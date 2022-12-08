@@ -1,6 +1,11 @@
-schema: ${VITE_GRAPHQL_API_ENDPOINT}
+schema:
+    - ${VITE_GRAPHQL_API_ENDPOINT}
+    - "schema.graphql"
 overwrite: true
-documents: "src/**/*.tsx"
+documents:
+    - "app/**/*.tsx"
+    - "app/**/*.ts"
+    - "!/gql/**/*"
 emitLegacyCommonJSImports: false
 ignoreNoDocuments: true
 generates:
@@ -11,3 +16,9 @@ generates:
             arrayInputCoercion: false
             enumsAsTypes: true
             skipTypename: true
+    ./gql/schema.json:
+        plugins:
+            - "introspection"
+    schema.graphql:
+        plugins:
+            - "schema-ast"
