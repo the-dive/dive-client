@@ -1,5 +1,4 @@
 schema:
-    - "schema.graphql"
     - ${VITE_GRAPHQL_API_ENDPOINT}
 overwrite: true
 documents:

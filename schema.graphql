@@ -1,39 +1,14 @@
-type CreateFile {
+type CreateDataset {
   errors: [GenericScalar!]
   ok: Boolean
-  result: FileType
+  result: DatasetType
 }
 
-input CreateFileInputType {
+input CreateDatasetInputType {
   file: Upload!
-  fileType: FileTypeEnum!
 }
 
-type DatasetListType {
-  """Page Number"""
-  page: Int
-
-  """Page Size"""
-  pageSize: Int
-  results: [DatasetType!]
-
-  """Total count of matches elements"""
-  totalCount: Int
-}
-
-"""An enumeration."""
-enum DatasetStatus {
-  """Extracted"""
-  EXTRACTED
-
-  """Pending"""
-  PENDING
-
-  """Uploaded"""
-  UPLOADED
-}
-
-type DatasetType {
+type DatasetDetailType {
   """"""
   createdAt: DateTime!
 
@@ -42,12 +17,7 @@ type DatasetType {
 
   """"""
   extraData: JSONString!
-
-  """"""
-  fileSizeBytes: Int!
-
-  """"""
-  fileUrl: String!
+  file: ID!
 
   """"""
   hasErrored: Boolean!
@@ -66,6 +36,46 @@ type DatasetType {
 
   """"""
   status: DatasetStatus!
+  statusDisplay: EnumDescription
+  tables: [TableType!]
+}
+
+type DatasetListType {
+  """Page Number"""
+  page: Int
+
+  """Page Size"""
+  pageSize: Int
+  results: [DatasetDetailType!]
+
+  """Total count of matches elements"""
+  totalCount: Int
+}
+
+"""An enumeration."""
+enum DatasetStatus {
+  """Extracted"""
+  EXTRACTED
+
+  """Pending"""
+  PENDING
+
+  """Uploaded"""
+  UPLOADED
+}
+
+type DatasetType {
+  file: ID!
+
+  """"""
+  id: ID!
+
+  """"""
+  name: String!
+
+  """"""
+  status: DatasetStatus!
+  statusDisplay: EnumDescription
   tables: [TableType!]
 }
 
@@ -82,6 +92,29 @@ character sequences. The String type is most often used by GraphQL to
 represent free-form human-readable text.
 """
 scalar EnumDescription
+
+type FileDetailType {
+  """"""
+  createdAt: DateTime!
+
+  """"""
+  datasetSet: [DatasetDetailType!]!
+
+  """"""
+  file: String!
+
+  """"""
+  fileSize: Int!
+
+  """"""
+  fileType: FileFileType!
+
+  """"""
+  id: ID!
+
+  """"""
+  modifiedAt: DateTime!
+}
 
 """An enumeration."""
 enum FileFileType {
@@ -151,14 +184,14 @@ schema (one of the key benefits of GraphQL).
 scalar JSONString
 
 type Mutation {
-  createFile(data: CreateFileInputType!): CreateFile
+  createDataset(data: CreateDatasetInputType!): CreateDataset
 }
 
 type Query {
   dataset(
     """Django object unique identification field"""
     id: ID!
-  ): DatasetType
+  ): DatasetDetailType
 
   """Dataset list"""
   datasets(
@@ -177,10 +210,12 @@ type Query {
   file(
     """Django object unique identification field"""
     id: ID!
-  ): FileType
+  ): FileDetailType
 
   """File list"""
   files(
+    fileStatuses: [FileTypeEnum!]
+
     """
     A string or comma delimited string values that indicate the default ordering when obtaining lists of objects.
     """
@@ -206,6 +241,9 @@ enum TableStatus {
 type TableType {
   """"""
   id: ID!
+
+  """"""
+  isAddedToWorkspace: Boolean!
 
   """"""
   name: String!
