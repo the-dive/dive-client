@@ -1,6 +1,6 @@
 schema:
-    - ${VITE_GRAPHQL_API_ENDPOINT}
     - "schema.graphql"
+    - ${VITE_GRAPHQL_API_ENDPOINT}
 overwrite: true
 documents:
     - "app/**/*.tsx"

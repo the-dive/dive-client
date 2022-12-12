@@ -6,7 +6,7 @@ export const theme: MantineThemeOverride = {
     colors: DEFAULT_COLORS,
     primaryColor: 'brand',
     primaryShade: {
-        light: 6,
+        light: 5,
         dark: 8,
     },
     loader: 'dots',
