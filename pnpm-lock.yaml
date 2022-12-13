@@ -13,7 +13,7 @@ specifiers:
   '@graphql-typed-document-node/core': ^3.1.1
   '@mantine/core': ^5.8.3
   '@mantine/hooks': ^5.8.3
-  '@togglecorp/fujs': ^1.9.3
+  '@togglecorp/fujs': ^2.0.0
   '@types/node': ^18.11.10
   '@types/react': ^18.0.17
   '@types/react-dom': ^18.0.6
@@ -66,7 +66,7 @@ dependencies:
   '@graphql-typed-document-node/core': 3.1.1_graphql@16.6.0
   '@mantine/core': 5.8.3_ytxtychshcsnut23hcxdg4s63q
   '@mantine/hooks': 5.8.3_react@18.2.0
-  '@togglecorp/fujs': 1.9.3
+  '@togglecorp/fujs': 2.0.0
   '@urql/devtools': 2.0.3_mfybxqh6aadwsv45w6sdn3i53a
   '@urql/exchange-multipart-fetch': 1.0.1_graphql@16.6.0
   graphql: 16.6.0
@@ -3096,8 +3096,10 @@ packages:
       - supports-color
     dev: false
 
-  /@togglecorp/fujs/1.9.3:
-    resolution: {integrity: sha512-gPoQwZ5+CbDxXrLyHhGIAHq2HNba1ifZQizpspyWO8cOuhYyCihOAlBS3fH+WewlCvPiQiOD/FkxCnNQAG3lOg==}
+  /@togglecorp/fujs/2.0.0:
+    resolution: {integrity: sha512-Fx5SF9kusbf35uT2WYlI6gdqqSL/e3JN4urAyB2O+jPz1VkG2I85VRqFxGjrg4m/ZZH+HRyGgLhSDn2V8LNdjA==}
+    dependencies:
+      '@babel/runtime': 7.19.0
     dev: false
 
   /@tootallnate/once/2.0.0:
