@@ -18,17 +18,26 @@ import { graphql } from '#gql';
 
 import styles from './styles.module.css';
 
-const createFileMutationDocument = graphql(/* GraphQL */`
-    mutation createFileMutation($file: Upload!, $fileType: FileTypeEnum!) {
-      createFile(data: {fileType: $fileType, file: $file}) {
-        errors
-        ok
-        result {
-          file
-          fileType
-          id
+const createDatasetMutationDocument = graphql(/* GraphQL */`
+    mutation createDatasetMutation($file: Upload!) {
+        createDataset(data: {file: $file}) {
+            errors
+            ok
+            result {
+                file
+                id
+                name
+                status
+                statusDisplay
+                tables {
+                    id
+                    isAddedToWorkspace
+                    name
+                    status
+                    statusDisplay
+                }
+            }
         }
-      }
     }
 `);
 
@@ -48,14 +57,13 @@ export default function Upload() {
     const [
         uploadFileResult,
         uploadFile,
-    ] = useMutation(createFileMutationDocument);
+    ] = useMutation(createDatasetMutationDocument);
 
     const handleExcelFileUpload = useCallback((file: File) => {
         uploadFile({
             file,
-            fileType: 'EXCEL',
         }).then((res) => {
-            if (res.data?.createFile?.ok) {
+            if (res.data?.createDataset?.ok) {
                 handleModalClose();
             }
             if (res.error) {
@@ -211,10 +219,10 @@ export default function Upload() {
                 </SimpleGrid>
                 {isAlertVisible && (
                     <Alert
-                        title="Error"
+                        title="Unable to upload file"
                         color="red"
                     >
-                        Cannot upload the file. Please try again.
+                        We cannot
                     </Alert>
                 )}
             </Modal>
