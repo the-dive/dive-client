@@ -39,7 +39,7 @@ jobs:
 
       - name: Typecheck
         env:
-          VITE_GRAPHQL_API_ENDPOINT: "schema.graphql"
+          VITE_GRAPHQL_CODEGEN_ENDPOINT: "schema.graphql"
         run: pnpm run typecheck
 
   build:
@@ -57,5 +57,5 @@ jobs:
 
       - name: Build
         env:
-          VITE_GRAPHQL_API_ENDPOINT: "schema.graphql"
+          VITE_GRAPHQL_CODEGEN_ENDPOINT: "schema.graphql"
         run: pnpm run build
