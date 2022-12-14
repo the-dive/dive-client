@@ -9,6 +9,7 @@ Create a `.env.local` file and copy all values from `.env.example` and add all n
 
 ```
 VITE_GRAPHQL_API_ENDPOINT=http://localhost:8000/graphql/
+VITE_GRAPHQL_CODEGEN_ENDPOINT=http://localhost:8000/graphql/
 ```
 
 Just run and visit http://localhost:5173
