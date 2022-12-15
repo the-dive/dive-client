@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import {
     Alert,
     Button,
+    Center,
     Paper,
     FileButton,
     Image,
@@ -75,158 +76,159 @@ export default function Upload() {
     const { fetching } = uploadFileResult;
 
     return (
-        <Paper className={styles.dropZone} withBorder>
-            <Text fz="md" ta="center">
-                Drag and drop a file or import from your computer
-            </Text>
-            <Button
-                variant="filled"
-                uppercase
-                leftIcon={<MdOutlineFileUpload />}
-                size="xs"
-                radius="xl"
-                onClick={handleModalOpen}
-            >
-                Import
-            </Button>
-            <Modal
-                opened={isModalVisible}
-                onClose={handleModalClose}
-                title={(
-                    <Title order={4}>
-                        Import
-                    </Title>
-                )}
-                radius="md"
-                size="sm"
-                padding="md"
-                centered
-            >
-                <SimpleGrid
-                    cols={3}
-                    spacing="md"
-                    verticalSpacing="md"
+        <Center>
+            <Paper className={styles.dropZone} withBorder>
+                <Text fz="md" ta="center">
+                    Drag and drop a file or import from your computer
+                </Text>
+                <Button
+                    variant="filled"
+                    uppercase
+                    leftIcon={<MdOutlineFileUpload />}
+                    size="xs"
+                    radius="xl"
+                    onClick={handleModalOpen}
                 >
-                    <LoadingOverlay visible={fetching} />
-                    <FileButton
-                        disabled
-                        onChange={handleExcelFileUpload} // FIXME: use file specific upload
-                        accept="text/plain"
+                    Import
+                </Button>
+                <Modal
+                    opened={isModalVisible}
+                    onClose={handleModalClose}
+                    title={(
+                        <Title order={3}>
+                            Import
+                        </Title>
+                    )}
+                    radius="md"
+                    size="sm"
+                    padding="md"
+                    centered
+                >
+                    <SimpleGrid
+                        cols={3}
+                        spacing="md"
+                        verticalSpacing="md"
                     >
-                        {({ onClick }) => (
-                            <Paper
-                                className={styles.paper}
-                                withBorder
-                                onClick={onClick}
-                            >
-                                <Image src="/assets/txt.svg" alt="Text file" />
-                                <Text fz="sm" ta="center">
-                                    Text file
-                                </Text>
-                            </Paper>
-                        )}
-                    </FileButton>
-                    <FileButton
-                        disabled={fetching}
-                        onChange={handleExcelFileUpload}
-                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                    >
-                        {({ onClick }) => (
-                            <Paper
-                                className={styles.paper}
-                                withBorder
-                                onClick={onClick}
-                            >
-                                <Image src="/assets/excel.svg" alt="Excel" />
-                                <Text fz="sm" ta="center">
-                                    Excel
-                                </Text>
-                            </Paper>
-                        )}
-                    </FileButton>
-                    <FileButton
-                        disabled
-                        onChange={handleExcelFileUpload} // FIXME: use file specific upload
-                        accept="application/json"
-                    >
-                        {({ onClick }) => (
-                            <Paper
-                                className={styles.paper}
-                                withBorder
-                                onClick={onClick}
-                            >
-                                <Image src="/assets/json.svg" alt="Json" />
-                                <Text fz="sm" ta="center">
-                                    JSON
-                                </Text>
-                            </Paper>
-                        )}
-                    </FileButton>
-                    <FileButton
-                        disabled
-                        onChange={handleExcelFileUpload} // FIXME: use file specific upload
-                        accept="*.log"
-                    >
-                        {({ onClick }) => (
-                            <Paper
-                                className={styles.paper}
-                                withBorder
-                                onClick={onClick}
-                            >
-                                <Image src="/assets/log.svg" alt="Log" />
-                                <Text fz="sm" ta="center">
-                                    Log file
-                                </Text>
-                            </Paper>
-                        )}
-                    </FileButton>
-                    <FileButton
-                        disabled
-                        onChange={handleExcelFileUpload} // FIXME: use file specific upload
-                        accept="text/plain"
-                    >
-                        {({ onClick }) => (
-                            <Paper
-                                className={styles.paper}
-                                withBorder
-                                onClick={onClick}
-                            >
-                                <Image src="/assets/stats.svg" alt="Stats" />
-                                <Text fz="sm" ta="center">
-                                    Stats file
-                                </Text>
-                            </Paper>
-                        )}
-                    </FileButton>
-                    <FileButton
-                        disabled
-                        onChange={handleExcelFileUpload} // FIXME: use file specific upload
-                        accept="text/plain"
-                    >
-                        {({ onClick }) => (
-                            <Paper
-                                className={styles.paper}
-                                withBorder
-                                onClick={onClick}
-                            >
-                                <Image src="/assets/kobo.svg" alt="Kobo" />
-                                <Text fz="sm" ta="center">
-                                    KoBo
-                                </Text>
-                            </Paper>
-                        )}
-                    </FileButton>
-                </SimpleGrid>
-                {isAlertVisible && (
-                    <Alert
-                        title="Unable to upload file"
-                        color="red"
-                    >
-                        We cannot
-                    </Alert>
-                )}
-            </Modal>
-        </Paper>
-
+                        <LoadingOverlay visible={fetching} />
+                        <FileButton
+                            disabled
+                            onChange={handleExcelFileUpload} // FIXME: use file specific upload
+                            accept="text/plain"
+                        >
+                            {({ onClick }) => (
+                                <Paper
+                                    className={styles.paper}
+                                    withBorder
+                                    onClick={onClick}
+                                >
+                                    <Image src="/assets/txt.svg" alt="Text file" />
+                                    <Text fz="sm" ta="center">
+                                        Text file
+                                    </Text>
+                                </Paper>
+                            )}
+                        </FileButton>
+                        <FileButton
+                            disabled={fetching}
+                            onChange={handleExcelFileUpload}
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        >
+                            {({ onClick }) => (
+                                <Paper
+                                    className={styles.paper}
+                                    withBorder
+                                    onClick={onClick}
+                                >
+                                    <Image src="/assets/excel.svg" alt="Excel" />
+                                    <Text fz="sm" ta="center">
+                                        Excel
+                                    </Text>
+                                </Paper>
+                            )}
+                        </FileButton>
+                        <FileButton
+                            disabled
+                            onChange={handleExcelFileUpload} // FIXME: use file specific upload
+                            accept="application/json"
+                        >
+                            {({ onClick }) => (
+                                <Paper
+                                    className={styles.paper}
+                                    withBorder
+                                    onClick={onClick}
+                                >
+                                    <Image src="/assets/json.svg" alt="Json" />
+                                    <Text fz="sm" ta="center">
+                                        JSON
+                                    </Text>
+                                </Paper>
+                            )}
+                        </FileButton>
+                        <FileButton
+                            disabled
+                            onChange={handleExcelFileUpload} // FIXME: use file specific upload
+                            accept="*.log"
+                        >
+                            {({ onClick }) => (
+                                <Paper
+                                    className={styles.paper}
+                                    withBorder
+                                    onClick={onClick}
+                                >
+                                    <Image src="/assets/log.svg" alt="Log" />
+                                    <Text fz="sm" ta="center">
+                                        Log file
+                                    </Text>
+                                </Paper>
+                            )}
+                        </FileButton>
+                        <FileButton
+                            disabled
+                            onChange={handleExcelFileUpload} // FIXME: use file specific upload
+                            accept="text/plain"
+                        >
+                            {({ onClick }) => (
+                                <Paper
+                                    className={styles.paper}
+                                    withBorder
+                                    onClick={onClick}
+                                >
+                                    <Image src="/assets/stats.svg" alt="Stats" />
+                                    <Text fz="sm" ta="center">
+                                        Stats file
+                                    </Text>
+                                </Paper>
+                            )}
+                        </FileButton>
+                        <FileButton
+                            disabled
+                            onChange={handleExcelFileUpload} // FIXME: use file specific upload
+                            accept="text/plain"
+                        >
+                            {({ onClick }) => (
+                                <Paper
+                                    className={styles.paper}
+                                    withBorder
+                                    onClick={onClick}
+                                >
+                                    <Image src="/assets/kobo.svg" alt="Kobo" />
+                                    <Text fz="sm" ta="center">
+                                        KoBo
+                                    </Text>
+                                </Paper>
+                            )}
+                        </FileButton>
+                    </SimpleGrid>
+                    {isAlertVisible && (
+                        <Alert
+                            title="Unable to upload file"
+                            color="red"
+                        >
+                            We couldn&apos;t upload the file. Please try uploading the file again.
+                        </Alert>
+                    )}
+                </Modal>
+            </Paper>
+        </Center>
     );
 }
