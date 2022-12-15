@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 function ProtectedLayout() {
     return (
         <AppShell
-            padding={0}
+            padding="xs"
             header={<Header height={60} p="xs"><Image height={30} width={100} src="/assets/DiveRegular.svg" /></Header>}
             styles={(theme) => ({
                 main: {

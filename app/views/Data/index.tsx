@@ -17,6 +17,7 @@ import {
 } from 'react-icons/md';
 import { graphql } from '#gql';
 
+import Workspace from './Workspace';
 import Upload from './Upload';
 import styles from './styles.module.css';
 
@@ -49,12 +50,13 @@ const datasetsQueryDocument = graphql(/* GraphQL */`
 
 export default function Data() {
     const [
-        dataSetsResult,
+        datasetResults,
     ] = useQuery({
         query: datasetsQueryDocument,
     });
 
-    const { data } = dataSetsResult;
+    const { data } = datasetResults;
+    const hasData = datasetResults.data?.datasets?.results;
 
     return (
         <div className={styles.dataPage}>
@@ -100,7 +102,11 @@ export default function Data() {
                     ))}
                 </Box>
             </Navbar>
-            <Upload />
+            {hasData ? (
+                <Workspace />
+            ) : (
+                <Upload />
+            )}
         </div>
     );
 }

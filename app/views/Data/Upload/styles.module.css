@@ -3,6 +3,7 @@
     flex-direction: column;
     gap: var(--mantine-spacing-md);
     align-items: center;
+    justify-content: center;
     border-radius: var(--mantine-radius-md);
     padding: var(--mantine-spacing-md);
     max-width: 250px;
