@@ -11,7 +11,7 @@
     .import {
         display: flex;
         flex-direction: column;
-        padding: 0 var(--mantine-spacing-sm);
+        padding: 0 var(--mantine-spacing-md);
 
         .heading {
             display: flex;
@@ -21,32 +21,42 @@
             padding-bottom: var(--mantine-spacing-sm);
         }
 
-        .content {
+        .collapse {
             display: flex;
-            gap: var(--mantine-spacing-sm);
+            flex-direction: column;
 
-            .table-properties-container {
+            .content {
                 display: flex;
-                flex-basis: 20%;
-                flex-direction: column;
                 gap: var(--mantine-spacing-sm);
-                background-color: var(--mantine-color-gray-1);
-                padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
 
-                .form {
+                .table-properties-container {
                     display: flex;
+                    flex-basis: 20%;
                     flex-direction: column;
-                    gap: var(--mantine-spacing-md);
+                    gap: var(--mantine-spacing-sm);
+                    background-color: var(--mantine-color-gray-1);
+                    padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
 
-                    .icon {
-                        color: var(--mantine-color-gray-5);
+                    .form {
+                        display: flex;
+                        flex-direction: column;
+                        gap: var(--mantine-spacing-md);
+
+                        .icon {
+                            color: var(--mantine-color-gray-5);
+                        }
                     }
+                }
+
+                .table-container {
+                    display: flex;
+                    flex-basis: 80%;
                 }
             }
 
-            .table-container {
+            .import-actions {
                 display: flex;
-                flex-basis: 80%;
+                padding: var(--mantine-spacing-sm) 0;
             }
         }
     }

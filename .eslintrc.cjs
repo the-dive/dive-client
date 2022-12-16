@@ -29,9 +29,6 @@ module.exports = {
     ],
     settings: {
         'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
-        'postcss-modules': {
-            camelCase: 'camelCaseOnly',
-        },
         'import/resolver': {
             typescript: {
                 directory: './tsconfig.json',
