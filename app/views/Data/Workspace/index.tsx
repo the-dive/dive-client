@@ -8,6 +8,7 @@ import {
     Paper,
     Select,
     Switch,
+    Table,
     TextInput,
     Title,
 } from '@mantine/core';
@@ -33,6 +34,14 @@ const tableProperties = {
     ],
 };
 
+const data = [
+    { position: 6, mass: 12.011, symbol: 'C', name: 'Carbon' },
+    { position: 7, mass: 14.007, symbol: 'N', name: 'Nitrogen' },
+    { position: 39, mass: 88.906, symbol: 'Y', name: 'Yttrium' },
+    { position: 56, mass: 137.33, symbol: 'Ba', name: 'Barium' },
+    { position: 58, mass: 140.12, symbol: 'Ce', name: 'Cerium' },
+];
+
 interface FormValues {
     headerLevel: string;
     timeZone: string;
@@ -42,7 +51,7 @@ interface FormValues {
 }
 
 export default function Workspace() {
-    const [opened, setOpened] = useToggle([true, false]);
+    const [opened, toggleOpened] = useToggle([true, false]);
 
     const tablePropertiesForm = useForm<FormValues>({
         initialValues: {
@@ -54,13 +63,22 @@ export default function Workspace() {
         },
     });
 
-    const handleButtonClick = useCallback(() => {
-        setOpened();
-    }, [setOpened]);
+    const handleCollapseClick = useCallback(() => {
+        toggleOpened();
+    }, [toggleOpened]);
 
     const handleFormSubmit = useCallback((values: FormValues) => {
         console.warn('values', values);
     }, []);
+
+    const rows = data.map((element) => (
+        <tr key={element.name}>
+            <td>{element.position}</td>
+            <td>{element.name}</td>
+            <td>{element.symbol}</td>
+            <td>{element.mass}</td>
+        </tr>
+    ));
 
     return (
         <Paper className={styles.workspaceContainer}>
@@ -75,14 +93,14 @@ export default function Workspace() {
                         color="dark"
                         size="md"
                         variant="transparent"
-                        onClick={handleButtonClick}
+                        onClick={handleCollapseClick}
                     >
                         {opened ? <IoChevronUp /> : <IoChevronDown />}
                     </ActionIcon>
                 </div>
-                <Collapse in={opened}>
+                <Collapse in={opened} className={styles.collapse}>
                     <div className={styles.content}>
-                        <Paper className={styles.tablePropertiesContainer}>
+                        <Paper className={styles.tablePropertiesContainer} radius="md">
                             <Title order={5} color="dimmed" weight="600">Properties</Title>
                             <Divider />
                             <form
@@ -122,15 +140,29 @@ export default function Workspace() {
                                     {...tablePropertiesForm.getInputProps('language')}
                                 />
                                 <Group position="apart">
-                                    <Button type="reset" radius="xl" variant="default">Reset</Button>
-                                    <Button type="submit" radius="xl" variant="light">Apply</Button>
+                                    <Button type="reset" radius="xl" variant="default" uppercase>Reset</Button>
+                                    <Button type="submit" radius="xl" variant="light" uppercase>Apply</Button>
                                 </Group>
                             </form>
                         </Paper>
-                        <Paper className={styles.tableContainer}>
-                            Hari
+                        <Paper className={styles.tableContainer} radius="md" withBorder>
+                            <Table striped withColumnBorders>
+                                <thead>
+                                    <tr>
+                                        <th>Element position</th>
+                                        <th>Element name</th>
+                                        <th>Symbol</th>
+                                        <th>Atomic mass</th>
+                                    </tr>
+                                </thead>
+                                <tbody>{rows}</tbody>
+                            </Table>
                         </Paper>
                     </div>
+                    <Group position="right" className={styles.importActions}>
+                        <Button type="reset" radius="xl" variant="default" uppercase>Cancel</Button>
+                        <Button type="submit" radius="xl" variant="light" uppercase>Import</Button>
+                    </Group>
                 </Collapse>
             </Paper>
         </Paper>
