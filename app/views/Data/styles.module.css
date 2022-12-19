@@ -3,4 +3,29 @@
     flex-grow: 1;
     align-items: center;
     justify-content: center;
+
+    .side-pane {
+        gap: var(--mantine-spacing-md);
+
+        .side-pane-head {
+            display: flex;
+            flex-direction: column;
+            gap: var(--mantine-spacing-md);
+
+            .nav-bar-title {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .add-search {
+                display: flex;
+                gap: var(--mantine-spacing-sm);
+            }
+        }
+
+        .data-sets-table {
+            color: var(--mantine-color-grey-6);
+        }
+    }
 }

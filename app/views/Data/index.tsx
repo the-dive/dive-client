@@ -1,5 +1,20 @@
-import { Navbar } from '@mantine/core';
+import {
+    Avatar,
+    Box,
+    Image,
+    Navbar,
+    NavLink,
+    Text,
+    TextInput,
+    UnstyledButton,
+} from '@mantine/core';
 import { useQuery } from 'urql';
+import {
+    MdOutlineSettings,
+    MdAdd,
+    MdOutlineSearch,
+    MdOutlineTableChart,
+} from 'react-icons/md';
 import { graphql } from '#gql';
 
 import Upload from './Upload';
@@ -33,17 +48,57 @@ const datasetsQueryDocument = graphql(/* GraphQL */`
 `);
 
 export default function Data() {
-    useQuery({
+    const [
+        dataSetsResult,
+    ] = useQuery({
         query: datasetsQueryDocument,
     });
+
+    const { data } = dataSetsResult;
 
     return (
         <div className={styles.dataPage}>
             <Navbar
                 p="xs"
                 width={{ sm: 200, lg: 300, base: 200 }}
+                className={styles.sidePane}
             >
-                {/* Navbar content */}
+                <div className={styles.sidePaneHead}>
+                    <div className={styles.navBarTitle}>
+                        <Text fz="md" fw={600}>Mira Colombia</Text>
+                        <MdOutlineSettings />
+                    </div>
+                    <div className={styles.addSearch}>
+                        <UnstyledButton>
+                            <Avatar size={36} color="#3151D5">
+                                <MdAdd />
+                            </Avatar>
+                        </UnstyledButton>
+                        <TextInput placeholder="Search" icon={<MdOutlineSearch />} />
+                    </div>
+                </div>
+                <Box>
+                    {data?.datasets?.results?.map((item) => (
+                        <NavLink
+                            key={item.id}
+                            icon={<Image src="/assets/excel.svg" />}
+                            label={(
+                                <Text fw={600}>
+                                    {`${item.name}`}
+                                </Text>
+                            )}
+                        >
+                            {item.tables?.map((table) => (
+                                <NavLink
+                                    className={styles.dataSetsTable}
+                                    icon={<MdOutlineTableChart />}
+                                    key={table.id}
+                                    label={`${table.name}`}
+                                />
+                            ))}
+                        </NavLink>
+                    ))}
+                </Box>
             </Navbar>
             <Upload />
         </div>
