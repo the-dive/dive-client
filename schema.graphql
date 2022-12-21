@@ -183,8 +183,17 @@ schema (one of the key benefits of GraphQL).
 """
 scalar JSONString
 
+type KeyValueType {
+  key: String
+  label: String
+}
+
 type Mutation {
   createDataset(data: CreateDatasetInputType!): CreateDataset
+}
+
+type PropertiesType {
+  table: TablePropertiesType
 }
 
 type Query {
@@ -227,6 +236,13 @@ type Query {
     """Number of results to return per page. Default 'page_size': 20"""
     pageSize: Int
   ): FileListType
+  properties: PropertiesType
+}
+
+type TablePropertiesType {
+  headers: [KeyValueType]
+  languages: [KeyValueType]
+  timeZones: [KeyValueType]
 }
 
 """An enumeration."""

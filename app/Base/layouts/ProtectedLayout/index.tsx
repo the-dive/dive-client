@@ -1,11 +1,11 @@
-import { AppShell, Header } from '@mantine/core';
+import { AppShell, Header, Image } from '@mantine/core';
 import { Outlet } from 'react-router-dom';
 
 function ProtectedLayout() {
     return (
         <AppShell
             padding={0}
-            header={<Header height={60} p="xs">{/* Header content */}</Header>}
+            header={<Header height={60} p="xs"><Image height={30} width={100} src="/assets/DiveRegular.svg" /></Header>}
             styles={(theme) => ({
                 main: {
                     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
