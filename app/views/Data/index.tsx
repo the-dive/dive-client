@@ -1,12 +1,15 @@
+import { useCallback, useState } from 'react';
 import {
-    Avatar,
-    Box,
+    ActionIcon,
+    Group,
     Image,
-    Navbar,
+    Loader,
     NavLink,
+    Navbar,
+    Stack,
     Text,
     TextInput,
-    UnstyledButton,
+    Title,
 } from '@mantine/core';
 import { useQuery } from 'urql';
 import {
@@ -15,10 +18,12 @@ import {
     MdOutlineSearch,
     MdOutlineTableChart,
 } from 'react-icons/md';
+import { isDefined } from '@togglecorp/fujs';
 import { graphql } from '#gql';
 
 import Workspace from './Workspace';
 import Upload from './Upload';
+import UploadModal from './Upload/UploadModal';
 import styles from './styles.module.css';
 
 const datasetsQueryDocument = graphql(/* GraphQL */`
@@ -49,64 +54,88 @@ const datasetsQueryDocument = graphql(/* GraphQL */`
 `);
 
 export default function Data() {
+    const [isModalVisible, setModalVisible] = useState(false);
     const [
         datasetResults,
     ] = useQuery({
         query: datasetsQueryDocument,
     });
 
-    const { data } = datasetResults;
-    const hasData = datasetResults.data?.datasets?.results;
+    const {
+        data,
+        fetching,
+    } = datasetResults;
+
+    const handleModalClose = useCallback(() => {
+        setModalVisible(false);
+    }, []);
+
+    const handleAddClick = useCallback(() => {
+        setModalVisible(true);
+    }, []);
+
+    const hasData = isDefined(data?.datasets?.results);
 
     return (
         <div className={styles.dataPage}>
             <Navbar
                 p="xs"
                 width={{ sm: 200, lg: 300, base: 200 }}
-                className={styles.sidePane}
             >
-                <div className={styles.sidePaneHead}>
-                    <div className={styles.navBarTitle}>
-                        <Text fz="md" fw={600}>Mira Colombia</Text>
-                        <MdOutlineSettings />
-                    </div>
-                    <div className={styles.addSearch}>
-                        <UnstyledButton>
-                            <Avatar size={36} color="#3151D5">
+                <Navbar.Section>
+                    <Stack>
+                        <Group position="apart">
+                            <Title order={3}>Datasets</Title>
+                            <MdOutlineSettings />
+                        </Group>
+                        <Group position="apart">
+                            <ActionIcon
+                                variant="filled"
+                                size="md"
+                                color="brand"
+                                onClick={handleAddClick}
+                            >
                                 <MdAdd />
-                            </Avatar>
-                        </UnstyledButton>
-                        <TextInput placeholder="Search" icon={<MdOutlineSearch />} />
-                    </div>
-                </div>
-                <Box>
+                            </ActionIcon>
+                            <TextInput placeholder="Search" icon={<MdOutlineSearch />} />
+                        </Group>
+                    </Stack>
+                </Navbar.Section>
+                <Navbar.Section grow>
                     {data?.datasets?.results?.map((item) => (
                         <NavLink
                             key={item.id}
-                            icon={<Image src="/assets/excel.svg" />}
+                            icon={<Image src="/assets/excel.svg" alt="excel" />}
                             label={(
                                 <Text fw={600}>
-                                    {`${item.name}`}
+                                    {item.name}
                                 </Text>
                             )}
                         >
                             {item.tables?.map((table) => (
                                 <NavLink
-                                    className={styles.dataSetsTable}
-                                    icon={<MdOutlineTableChart />}
                                     key={table.id}
-                                    label={`${table.name}`}
+                                    icon={<MdOutlineTableChart />}
+                                    label={table.name}
                                 />
                             ))}
                         </NavLink>
                     ))}
-                </Box>
+                </Navbar.Section>
             </Navbar>
-            {hasData ? (
+            {fetching && (
+                <Loader className={styles.loader} />
+            )}
+            {!fetching && hasData && (
                 <Workspace />
-            ) : (
+            )}
+            {!fetching && !hasData && (
                 <Upload />
             )}
+            <UploadModal
+                opened={isModalVisible}
+                onClose={handleModalClose}
+            />
         </div>
     );
 }
