@@ -183,8 +183,17 @@ schema (one of the key benefits of GraphQL).
 """
 scalar JSONString
 
+type KeyLabelType {
+  key: String
+  label: String
+}
+
 type Mutation {
   createDataset(data: CreateDatasetInputType!): CreateDataset
+}
+
+type PropertiesType {
+  table: TablePropertiesType
 }
 
 type Query {
@@ -227,10 +236,17 @@ type Query {
     """Number of results to return per page. Default 'page_size': 20"""
     pageSize: Int
   ): FileListType
+  properties: PropertiesType
   table(
     """Django object unique identification field"""
     id: ID!
   ): TableType
+}
+
+type TablePropertiesType {
+  headers: [KeyLabelType]
+  languages: [KeyLabelType]
+  timeZones: [KeyLabelType]
 }
 
 """An enumeration."""
