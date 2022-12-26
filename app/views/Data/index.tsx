@@ -55,6 +55,7 @@ const datasetsQueryDocument = graphql(/* GraphQL */`
 
 export default function Data() {
     const [isModalVisible, setModalVisible] = useState(false);
+    const [selectedTable, setSelectedTable] = useState<string | undefined>();
     const [
         datasetResults,
     ] = useQuery({
@@ -72,6 +73,14 @@ export default function Data() {
 
     const handleAddClick = useCallback(() => {
         setModalVisible(true);
+    }, []);
+
+    const handleTableClick = useCallback((tableId: string) => {
+        setSelectedTable(tableId);
+    }, []);
+
+    const handleTableImportCancel = useCallback(() => {
+        setSelectedTable(undefined);
     }, []);
 
     const hasData = isDefined(data?.datasets?.results);
@@ -117,6 +126,7 @@ export default function Data() {
                                     key={table.id}
                                     icon={<MdOutlineTableChart />}
                                     label={table.name}
+                                    onClick={() => handleTableClick(table.id)}
                                 />
                             ))}
                         </NavLink>
@@ -127,7 +137,10 @@ export default function Data() {
                 <Loader className={styles.loader} />
             )}
             {!fetching && hasData && (
-                <Workspace />
+                <Workspace
+                    selectedTable={selectedTable}
+                    onImportCancel={handleTableImportCancel}
+                />
             )}
             {!fetching && !hasData && (
                 <Upload />
