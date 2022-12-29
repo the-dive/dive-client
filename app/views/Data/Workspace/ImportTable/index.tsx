@@ -16,28 +16,11 @@ import {
     Title,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { useForm } from '@mantine/form';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { graphql } from '#gql';
 import styles from './styles.module.css';
-
-const tableProperties = {
-    headerLevelOptions: [
-        { value: '1', label: '1' },
-        { value: '2', label: '2' },
-        { value: '3', label: '3' },
-    ],
-    timeZoneOptions: [
-        { value: 'Nepal Time', label: 'Nepal Time' },
-        { value: 'UTC Time', label: 'UTC Time' },
-    ],
-    languageOptions: [
-        { value: 'English', label: 'English' },
-        { value: 'Nepali', label: 'Nepali' },
-        { value: 'Hindi', label: 'Hindi' },
-    ],
-};
 
 const tableQueryDocument = graphql(/* GraphQL */`
     query tableQuery($id: ID!) {
@@ -48,6 +31,73 @@ const tableQueryDocument = graphql(/* GraphQL */`
             previewData
             status
             statusDisplay
+            properties {
+                headerLevel
+                language
+                timezone
+                treatTheseAsNa
+                trimWhitespaces
+            }
+        }
+        propertiesOptions {
+            table {
+                headerLevels {
+                    key
+                    label
+                }
+                languages {
+                    key
+                    label
+                }
+                timezones {
+                    key
+                    label
+                }
+            }
+        }
+    }
+`);
+
+const createUpdateTableMutationDocument = graphql(/* GraphQL */ `
+    mutation createUpdateTableMutation(
+            $id: ID,
+            $isAddedToWorkspace: Boolean,
+            $headerLevel: String!,
+            $timezone: String!,
+            $language: String!,
+            $trimWhitespaces: Boolean!,
+            $treatTheseAsNa: String,
+        ){
+        updateTable(
+                id: $id
+                data: {
+                    isAddedToWorkspace: $isAddedToWorkspace,
+                    properties: {
+                        headerLevel: $headerLevel
+                        timezone: $timezone
+                        language: $language
+                        trimWhitespaces: $trimWhitespaces
+                        treatTheseAsNa: $treatTheseAsNa
+                    }
+                },
+            ) {
+            errors
+            ok
+            result {
+                id
+                isAddedToWorkspace
+                name
+                previewData
+                properties {
+                    headerLevel
+                    language
+                    timezone
+                    treatTheseAsNa
+                    trimWhitespaces
+                }
+                status
+                statusDisplay
+            }
         }
     }
 `);
@@ -59,11 +109,20 @@ interface Column {
 type Row = Record<string, string>;
 
 interface FormValues {
+    headerLevel?: string | null | undefined;
+    timezone?: string | null | undefined;
+    language?: string | null | undefined;
+    trimWhitespaces?: boolean ;
+    treatTheseAsNa?: string;
+}
+interface UpdateTable {
+    id?: string;
+    isAddedToWorkspace?: boolean;
     headerLevel: string;
-    timeZone: string;
-    trimWhiteSpace: boolean;
-    naValues: string;
+    timezone: string;
     language: string;
+    trimWhitespaces: boolean;
+    treatTheseAsNa?: string;
 }
 
 interface Props {
@@ -90,21 +149,47 @@ export default function ImportTable(props: Props) {
 
     const { data, fetching, error } = tableResult;
 
+    console.log(data?.table);
+
+    const [
+        updateTableResult,
+        updateTable,
+    ] = useMutation(createUpdateTableMutationDocument);
+
     const tablePropertiesForm = useForm<FormValues>({
-        initialValues: {
-            headerLevel: '1',
-            timeZone: 'Nepal Time',
-            trimWhiteSpace: true,
-            naValues: 'NA',
-            language: 'English',
-        },
+        initialValues: data?.table?.properties ?? {},
     });
 
     const handleCollapseClick = useCallback(() => {
         toggleOpened();
     }, [toggleOpened]);
 
-    const handleFormSubmit = useCallback(() => {}, []);
+    console.log('Update', updateTableResult);
+
+    const handleUpdateTable = useCallback((values: UpdateTable) => {
+        updateTable({
+            values,
+        }).then((res) => {
+            if (res.data?.updateTable?.ok) {
+                console.log('ok');
+            }
+            if (res.error) {
+                console.log('error', res.error);
+            }
+        });
+    }, [
+        updateTable,
+    ]);
+
+    const handleFormSubmit = useCallback((values) => {
+        console.warn('values', values);
+        const formValues = tablePropertiesForm.values;
+        handleUpdateTable(values);
+    }, [
+        tablePropertiesForm.values,
+        handleUpdateTable,
+        data,
+    ]);
 
     const colsKeys: string[] = data?.table?.previewData?.columns?.map((col: Column) => col.key);
 
@@ -132,90 +217,116 @@ export default function ImportTable(props: Props) {
 
     return (
         <Paper className={styles.import}>
-            <div className={styles.heading}>
-                <Title order={3}>{data?.table?.name}</Title>
-                <ActionIcon
-                    color="dark"
-                    size="md"
-                    variant="transparent"
-                    onClick={handleCollapseClick}
-                >
-                    {opened ? <IoChevronUp /> : <IoChevronDown />}
-                </ActionIcon>
-            </div>
-            <Collapse in={opened} className={styles.collapse}>
-                <div className={styles.content}>
-                    <Paper className={styles.tablePropertiesContainer} radius="md">
-                        <Title order={5} color="dimmed" weight="600">Properties</Title>
-                        <Divider />
-                        <form
-                            className={styles.form}
-                            onSubmit={tablePropertiesForm.onSubmit(handleFormSubmit)}
-                            onReset={tablePropertiesForm.onReset}
-                        >
-                            <Select
-                                label="Header Levels"
-                                data={tableProperties.headerLevelOptions}
-                                rightSection={<IoChevronDown className={styles.icon} />}
-                                styles={{ rightSection: { pointerEvents: 'none' } }}
-                                {...tablePropertiesForm.getInputProps('headerLevel')}
-                            />
-                            <Select
-                                label="Time Zone (Optional)"
-                                data={tableProperties.timeZoneOptions}
-                                rightSection={<IoChevronDown className={styles.icon} />}
-                                styles={{ rightSection: { pointerEvents: 'none' } }}
-                                {...tablePropertiesForm.getInputProps('timeZone')}
-                            />
-                            <Switch
-                                label="Trim White Space"
-                                labelPosition="left"
-                                {...tablePropertiesForm.getInputProps('trimWhiteSpace', { type: 'checkbox' })}
-                            />
-                            <TextInput
-                                label="Treat These as NA (Optional)"
-                                {...tablePropertiesForm.getInputProps('naValues')}
-                            />
-                            <Select
-                                label="Language"
-                                rightSection={<IoChevronDown className={styles.icon} />}
-                                rightSectionWidth={30}
-                                styles={{ rightSection: { pointerEvents: 'none' } }}
-                                data={tableProperties.languageOptions}
-                                {...tablePropertiesForm.getInputProps('language')}
-                            />
-                            <Group position="apart">
-                                <Button type="reset" radius="xl" variant="default" uppercase>Reset</Button>
-                                <Button type="submit" radius="xl" variant="light" uppercase>Apply</Button>
+            {fetching
+                ? <LoadingOverlay visible={fetching} />
+                : (
+                    <>
+                        <div className={styles.heading}>
+                            <Title order={3}>{data?.table?.name}</Title>
+                            <ActionIcon
+                                color="dark"
+                                size="md"
+                                variant="transparent"
+                                onClick={handleCollapseClick}
+                            >
+                                {opened ? <IoChevronUp /> : <IoChevronDown />}
+                            </ActionIcon>
+                        </div>
+                        <Collapse in={opened} className={styles.collapse}>
+                            <div className={styles.content}>
+                                <Paper className={styles.tablePropertiesContainer} radius="md">
+                                    <Title order={5} color="dimmed" weight="600">Properties</Title>
+                                    <Divider />
+                                    <form
+                                        className={styles.form}
+                                        onSubmit={tablePropertiesForm.onSubmit(handleFormSubmit)}
+                                        onReset={tablePropertiesForm.onReset}
+                                    >
+                                        <Select
+                                            label="Header Levels"
+                                            data={data?.propertiesOptions?.table?.headerLevels}
+                                            rightSection={<IoChevronDown className={styles.icon} />}
+                                            styles={{ rightSection: { pointerEvents: 'none' } }}
+                                            {...tablePropertiesForm.getInputProps('headerLevel')}
+                                        />
+                                        <Select
+                                            label="Time Zone (Optional)"
+                                            data={data?.propertiesOptions?.table?.timezones}
+                                            rightSection={<IoChevronDown className={styles.icon} />}
+                                            styles={{ rightSection: { pointerEvents: 'none' } }}
+                                            {...tablePropertiesForm.getInputProps('timezone')}
+                                        />
+                                        <Switch
+                                            label="Trim White Space"
+                                            labelPosition="left"
+                                            {...tablePropertiesForm.getInputProps('trimWhitespaces', { type: 'checkbox' })}
+                                        />
+                                        <TextInput
+                                            label="Treat These as NA (Optional)"
+                                            {...tablePropertiesForm.getInputProps('treatTheseAsNa')}
+                                        />
+                                        <Select
+                                            label="Language"
+                                            rightSection={<IoChevronDown className={styles.icon} />}
+                                            rightSectionWidth={30}
+                                            styles={{ rightSection: { pointerEvents: 'none' } }}
+                                            data={data?.propertiesOptions?.table?.languages}
+                                            {...tablePropertiesForm.getInputProps('language')}
+                                        />
+                                        <Group position="apart">
+                                            <Button
+                                                type="reset"
+                                                radius="xl"
+                                                variant="default"
+                                                uppercase
+                                            >
+                                                Reset
+                                            </Button>
+                                            <Button
+                                                type="submit"
+                                                radius="xl"
+                                                variant="light"
+                                                uppercase
+                                            >
+                                                Apply
+                                            </Button>
+                                        </Group>
+                                    </form>
+                                </Paper>
+                                <Paper className={styles.tableContainer} radius="md" withBorder>
+                                    <LoadingOverlay visible={fetching} />
+                                    {error ? (
+                                        <Center>
+                                            <Alert title="Unable to get table information" color="red" className={styles.alert}>
+                                                We couldn&apos;t get the table details.
+                                                Please try refreshing the page.
+                                            </Alert>
+                                        </Center>
+                                    ) : (
+                                        <Table striped withColumnBorders>
+                                            <thead>
+                                                <tr>
+                                                    {columns}
+                                                </tr>
+                                            </thead>
+                                            <tbody>{rows}</tbody>
+                                        </Table>
+                                    )}
+                                </Paper>
+                            </div>
+                            <Group position="right" className={styles.importActions}>
+                                <Button radius="xl" variant="default" uppercase onClick={onCancel}>Cancel</Button>
+                                <Button radius="xl" variant="light" uppercase disabled={fetching}>Import</Button>
                             </Group>
-                        </form>
-                    </Paper>
-                    <Paper className={styles.tableContainer} radius="md" withBorder>
-                        <LoadingOverlay visible={fetching} />
-                        {error ? (
-                            <Center>
-                                <Alert title="Unable to get table information" color="red" className={styles.alert}>
-                                    We couldn&apos;t get the table details.
-                                    Please try refreshing the page.
-                                </Alert>
-                            </Center>
-                        ) : (
-                            <Table striped withColumnBorders>
-                                <thead>
-                                    <tr>
-                                        {columns}
-                                    </tr>
-                                </thead>
-                                <tbody>{rows}</tbody>
-                            </Table>
-                        )}
-                    </Paper>
-                </div>
-                <Group position="right" className={styles.importActions}>
-                    <Button radius="xl" variant="default" uppercase onClick={onCancel}>Cancel</Button>
-                    <Button radius="xl" variant="light" uppercase disabled={fetching}>Import</Button>
-                </Group>
-            </Collapse>
+                            <Alert
+                                title="Update Table"
+                                color="green"
+                            >
+                                Table Updated
+                            </Alert>
+                        </Collapse>
+                    </>
+                )}
         </Paper>
     );
 }
