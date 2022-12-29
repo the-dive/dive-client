@@ -190,10 +190,11 @@ type KeyLabelType {
 
 type Mutation {
   createDataset(data: CreateDatasetInputType!): CreateDataset
+  updateTable(data: TableInputType!, id: ID): UpdateTable
 }
 
-type PropertiesType {
-  table: TablePropertiesType
+type PropertiesOptionsType {
+  table: TablePropertiesOptionsType
 }
 
 type Query {
@@ -236,17 +237,44 @@ type Query {
     """Number of results to return per page. Default 'page_size': 20"""
     pageSize: Int
   ): FileListType
-  properties: PropertiesType
+  propertiesOptions: PropertiesOptionsType
   table(
     """Django object unique identification field"""
     id: ID!
   ): TableType
 }
 
-type TablePropertiesType {
-  headers: [KeyLabelType]
+input TableInputType {
+  isAddedToWorkspace: Boolean
+  name: String
+  properties: TablePropertiesInputType
+}
+
+input TablePropertiesInputType {
+  headerLevel: String!
+  language: String!
+  timezone: String!
+  treatTheseAsNa: String
+  trimWhitespaces: Boolean!
+}
+
+"""
+Type for table properties options.
+For example: table properties has following keys: headerLevel, time_zone, etc
+"""
+type TablePropertiesOptionsType {
+  headerLevels: [KeyLabelType]
   languages: [KeyLabelType]
-  timeZones: [KeyLabelType]
+  timezones: [KeyLabelType]
+}
+
+"""Type for table properties which is a json field in database"""
+type TablePropertiesType {
+  headerLevel: String
+  language: String
+  timezone: String
+  treatTheseAsNa: String
+  trimWhitespaces: Boolean
 }
 
 """An enumeration."""
@@ -268,10 +296,17 @@ type TableType {
   """"""
   name: String!
   previewData: GenericScalar
+  properties: TablePropertiesType
 
   """"""
   status: TableStatus!
   statusDisplay: EnumDescription
+}
+
+type UpdateTable {
+  errors: [GenericScalar!]
+  ok: Boolean
+  result: TableType
 }
 
 """
