@@ -24,6 +24,7 @@
         "noImplicitReturns": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
+        "baseUrl": ".",
         "paths": {
             "#gql": ["./gql/index.ts"],
             "#gql/*": ["./gql/*"],

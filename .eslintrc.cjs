@@ -13,6 +13,8 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:jsx-a11y/recommended',
         'plugin:react/jsx-runtime',
+        'plugin:import/recommended',
+        'plugin:import/typescript',
     ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
@@ -24,18 +26,18 @@ module.exports = {
         project: './tsconfig.json',
     },
     plugins: [
+        'import',
         'react',
         '@typescript-eslint',
     ],
     settings: {
         'import/extensions': ['.js', '.jsx', '.ts', '.tsx'],
+        'import/parsers': {
+            '@typescript-eslint/parser': ['.js', '.jsx', '.ts', '.tsx'],
+        },
         'import/resolver': {
-            typescript: {
-                directory: './tsconfig.json',
-            },
-            node: {
-                extensions: ['.js', '.jsx', '.ts', '.tsx'],
-            },
+            typescript: {},
+            node: {},
         },
     },
     rules: {
@@ -52,6 +54,7 @@ module.exports = {
         'react/jsx-indent-props': [2, 4],
         '@typescript-eslint/indent': ['error', 4],
         'import/extensions': ['off', 'never'],
+        'import/no-unresolved': 'error',
         'prefer-destructuring': 'warn',
         'function-paren-newline': ['warn', 'consistent'],
         'object-curly-newline': [2, {

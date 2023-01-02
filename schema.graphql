@@ -1,3 +1,19 @@
+type AddTableToWorkSpace {
+  errors: [GenericScalar!]
+  ok: Boolean
+  result: TableType
+}
+
+type CloneTable {
+  errors: [GenericScalar!]
+  ok: Boolean
+  result: TableType
+}
+
+type ColumnPropertiesOptionsType {
+  columnTypes: [KeyLabelType]
+}
+
 type CreateDataset {
   errors: [GenericScalar!]
   ok: Boolean
@@ -37,6 +53,9 @@ type DatasetDetailType {
   """"""
   status: DatasetStatus!
   statusDisplay: EnumDescription
+
+  """"""
+  tableSet: [TableType!]!
   tables: [TableType!]
 }
 
@@ -85,6 +104,12 @@ value as specified by
 [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
 """
 scalar DateTime
+
+type DeleteTableFromWorkspace {
+  errors: [GenericScalar!]
+  ok: Boolean
+  result: TableType
+}
 
 """
 The `EnumDescription` scalar type represents of Enum description data, represented as UTF-8
@@ -189,11 +214,15 @@ type KeyLabelType {
 }
 
 type Mutation {
+  addTableToWorkspace(data: TableInputType!, id: ID!): AddTableToWorkSpace
+  cloneTable(id: ID!): CloneTable
   createDataset(data: CreateDatasetInputType!): CreateDataset
-  updateTable(data: TableInputType!, id: ID): UpdateTable
+  deleteTableFromWorkspace(id: ID!): DeleteTableFromWorkspace
+  updateTableProperties(data: TablePropertiesInputType!, id: ID!): UpdateTableProperties
 }
 
 type PropertiesOptionsType {
+  column: ColumnPropertiesOptionsType
   table: TablePropertiesOptionsType
 }
 
@@ -245,9 +274,7 @@ type Query {
 }
 
 input TableInputType {
-  isAddedToWorkspace: Boolean
-  name: String
-  properties: TablePropertiesInputType
+  isAddedToWorkspace: Boolean!
 }
 
 input TablePropertiesInputType {
@@ -288,6 +315,9 @@ enum TableStatus {
 
 type TableType {
   """"""
+  clonedFrom: TableType
+
+  """"""
   id: ID!
 
   """"""
@@ -303,7 +333,7 @@ type TableType {
   statusDisplay: EnumDescription
 }
 
-type UpdateTable {
+type UpdateTableProperties {
   errors: [GenericScalar!]
   ok: Boolean
   result: TableType

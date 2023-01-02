@@ -8,7 +8,7 @@
     "dev": "pnpm codegen && vite",
     "build": "pnpm codegen && tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint app --ext .js,.jsx,.ts,.tsx",
+    "lint": "pnpm codegen && eslint app --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint app --ext .js,.jsx,.ts,.tsx --fix",
     "typecheck": "pnpm codegen && tsc",
     "stylelint": "stylelint --cache --fix --ignore-path .gitignore **/*.css",
