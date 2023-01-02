@@ -1,0 +1,19 @@
+.table-properties-container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: var(--mantine-spacing-sm);
+    background-color: var(--mantine-color-gray-1);
+    padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mantine-spacing-md);
+
+        .icon {
+            color: var(--mantine-color-gray-5);
+        }
+    }
+}

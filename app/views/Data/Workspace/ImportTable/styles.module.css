@@ -17,31 +17,13 @@
 
         .content {
             display: flex;
+            flex-grow: 1;
             gap: var(--mantine-spacing-sm);
-
-            .table-properties-container {
-                display: flex;
-                flex-direction: column;
-                flex-shrink: 0;
-                gap: var(--mantine-spacing-sm);
-                background-color: var(--mantine-color-gray-1);
-                padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
-
-                .form {
-                    display: flex;
-                    flex-direction: column;
-                    gap: var(--mantine-spacing-md);
-
-                    .icon {
-                        color: var(--mantine-color-gray-5);
-                    }
-                }
-            }
 
             .table-container {
                 display: flex;
                 flex-grow: 1;
-                max-height: 45vh;
+                max-height: 50vh;
                 overflow: auto;
 
                 .alert {

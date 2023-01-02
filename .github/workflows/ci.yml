@@ -22,6 +22,8 @@ jobs:
         run: pnpm install
 
       - name: Lint
+        env:
+          VITE_GRAPHQL_CODEGEN_ENDPOINT: "schema.graphql"
         run: pnpm run lint
 
   typecheck:
