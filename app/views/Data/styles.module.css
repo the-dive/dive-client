@@ -4,6 +4,11 @@
     justify-content: center;
     overflow: auto;
 
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+    }
+
     .loader {
         align-self: center;
     }

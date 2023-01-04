@@ -214,7 +214,7 @@ type KeyLabelType {
 }
 
 type Mutation {
-  addTableToWorkspace(data: TableInputType!, id: ID!): AddTableToWorkSpace
+  addTableToWorkspace(id: ID!, isAddedToWorkspace: Boolean!): AddTableToWorkSpace
   cloneTable(id: ID!): CloneTable
   createDataset(data: CreateDatasetInputType!): CreateDataset
   deleteTableFromWorkspace(id: ID!): DeleteTableFromWorkspace
@@ -271,10 +271,6 @@ type Query {
     """Django object unique identification field"""
     id: ID!
   ): TableType
-}
-
-input TableInputType {
-  isAddedToWorkspace: Boolean!
 }
 
 input TablePropertiesInputType {
