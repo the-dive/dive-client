@@ -116,9 +116,10 @@ export default function Data() {
                         </Group>
                     </Stack>
                 </Navbar.Section>
-                <Navbar.Section grow mx="-xs" px="xs" className={styles.navLinks} component={ScrollArea}>
+                <Navbar.Section grow mx="-xs" px="xs" component={ScrollArea}>
                     {data?.datasets?.results?.map((item) => (
                         <NavLink
+                            className={styles.navLink}
                             key={item.id}
                             icon={<Image src="/assets/excel.svg" alt="excel" />}
                             label={(
@@ -129,6 +130,7 @@ export default function Data() {
                         >
                             {item.tables?.map((table) => (
                                 <NavLink
+                                    className={styles.navLink}
                                     key={table.id}
                                     icon={<MdOutlineTableChart />}
                                     label={table.name}

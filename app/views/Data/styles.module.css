@@ -4,9 +4,8 @@
     justify-content: center;
     overflow: auto;
 
-    .nav-links {
-        display: flex;
-        flex-direction: column;
+    .nav-link {
+        word-break: break-word;
     }
 
     .loader {
