@@ -9,11 +9,13 @@ import styles from './styles.module.css';
 interface Props {
     selectedTable?: string;
     onImportCancel: () => void;
+    onImportSuccess: () => void;
 }
 export default function Workspace(props: Props) {
     const {
         selectedTable,
         onImportCancel,
+        onImportSuccess,
     } = props;
 
     return (
@@ -27,6 +29,7 @@ export default function Workspace(props: Props) {
                     key={selectedTable}
                     tableId={selectedTable}
                     onCancel={onImportCancel}
+                    onSuccess={onImportSuccess}
                 />
             )}
         </Paper>

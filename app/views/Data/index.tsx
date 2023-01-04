@@ -6,6 +6,7 @@ import {
     Loader,
     NavLink,
     Navbar,
+    ScrollArea,
     Stack,
     Text,
     TextInput,
@@ -47,6 +48,7 @@ const datasetsQueryDocument = graphql(/* GraphQL */`
                     name
                     status
                     statusDisplay
+                    isAddedToWorkspace
                 }
             }
         }
@@ -83,6 +85,10 @@ export default function Data() {
         setSelectedTable(undefined);
     }, []);
 
+    const handleTableImportSuccess = useCallback(() => {
+        setSelectedTable(undefined);
+    }, []);
+
     const hasData = isDefined(data?.datasets?.results);
 
     return (
@@ -110,7 +116,7 @@ export default function Data() {
                         </Group>
                     </Stack>
                 </Navbar.Section>
-                <Navbar.Section grow>
+                <Navbar.Section grow mx="-xs" px="xs" className={styles.navLinks} component={ScrollArea}>
                     {data?.datasets?.results?.map((item) => (
                         <NavLink
                             key={item.id}
@@ -126,6 +132,7 @@ export default function Data() {
                                     key={table.id}
                                     icon={<MdOutlineTableChart />}
                                     label={table.name}
+                                    disabled={table.isAddedToWorkspace}
                                     onClick={() => handleTableClick(table.id)}
                                 />
                             ))}
@@ -140,6 +147,7 @@ export default function Data() {
                 <Workspace
                     selectedTable={selectedTable}
                     onImportCancel={handleTableImportCancel}
+                    onImportSuccess={handleTableImportSuccess}
                 />
             )}
             {!fetching && !hasData && (

@@ -1,5 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { cacheExchange, createClient, dedupExchange, Provider } from 'urql';
+import {
+    cacheExchange,
+    createClient,
+    dedupExchange,
+    Provider,
+} from 'urql';
 import { multipartFetchExchange } from '@urql/exchange-multipart-fetch';
 import { devtoolsExchange } from '@urql/devtools';
 

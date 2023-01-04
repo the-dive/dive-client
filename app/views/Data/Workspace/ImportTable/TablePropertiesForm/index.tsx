@@ -9,6 +9,7 @@ import {
     TextInput,
     Title,
     LoadingOverlay,
+    ScrollArea,
 } from '@mantine/core';
 import { useMutation } from 'urql';
 import { IoChevronDown } from 'react-icons/io5';
@@ -170,68 +171,70 @@ export default function TablePropertiesForm(props: Props) {
 
     return (
         <Paper className={styles.tablePropertiesContainer} radius="md">
-            <Title order={5} color="dimmed" weight="600">Properties</Title>
-            <Divider />
-            <LoadingOverlay visible={fetching} />
-            <form
-                className={styles.form}
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                onSubmit={tablePropertiesForm.onSubmit(handleFormSubmit)} // TODO: graphql types
-                onReset={handleFormReset}
-            >
-                <Select
-                    label="Header Levels"
-                    data={options?.headerLevels}
-                    rightSection={<IoChevronDown className={styles.icon} />}
-                    styles={{ rightSection: { pointerEvents: 'none' } }}
-                    {...tablePropertiesForm.getInputProps('headerLevel')}
-                />
-                <Select
-                    label="Time Zone (Optional)"
-                    data={options?.timezones}
-                    rightSection={<IoChevronDown className={styles.icon} />}
-                    styles={{ rightSection: { pointerEvents: 'none' } }}
-                    {...tablePropertiesForm.getInputProps('timezone')}
-                />
-                <Switch
-                    label="Trim White Space"
-                    labelPosition="left"
-                    {...tablePropertiesForm.getInputProps('trimWhitespaces', { type: 'checkbox' })}
-                />
-                <TextInput
-                    label="Treat These as NA (Optional)"
-                    {...tablePropertiesForm.getInputProps('treatTheseAsNa')}
-                />
-                <Select
-                    label="Language"
-                    rightSection={<IoChevronDown className={styles.icon} />}
-                    rightSectionWidth={30}
-                    styles={{ rightSection: { pointerEvents: 'none' } }}
-                    data={options?.languages}
-                    {...tablePropertiesForm.getInputProps('language')}
-                />
-                <Group position="apart">
-                    <Button
-                        disabled={fetching || formIsClean}
-                        type="reset"
-                        radius="xl"
-                        variant="default"
-                        uppercase
-                    >
-                        Reset
-                    </Button>
-                    <Button
-                        disabled={fetching || formIsClean}
-                        type="submit"
-                        radius="xl"
-                        variant="light"
-                        uppercase
-                    >
-                        Apply
-                    </Button>
-                </Group>
-            </form>
+            <ScrollArea offsetScrollbars>
+                <Title order={5} color="dimmed" weight="600">Properties</Title>
+                <Divider />
+                <LoadingOverlay visible={fetching} />
+                <form
+                    className={styles.form}
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    onSubmit={tablePropertiesForm.onSubmit(handleFormSubmit)} // TODO: graphql types
+                    onReset={handleFormReset}
+                >
+                    <Select
+                        label="Header Levels"
+                        data={options?.headerLevels}
+                        rightSection={<IoChevronDown className={styles.icon} />}
+                        styles={{ rightSection: { pointerEvents: 'none' } }}
+                        {...tablePropertiesForm.getInputProps('headerLevel')}
+                    />
+                    <Select
+                        label="Time Zone (Optional)"
+                        data={options?.timezones}
+                        rightSection={<IoChevronDown className={styles.icon} />}
+                        styles={{ rightSection: { pointerEvents: 'none' } }}
+                        {...tablePropertiesForm.getInputProps('timezone')}
+                    />
+                    <Switch
+                        label="Trim White Space"
+                        labelPosition="left"
+                        {...tablePropertiesForm.getInputProps('trimWhitespaces', { type: 'checkbox' })}
+                    />
+                    <TextInput
+                        label="Treat These as NA (Optional)"
+                        {...tablePropertiesForm.getInputProps('treatTheseAsNa')}
+                    />
+                    <Select
+                        label="Language"
+                        rightSection={<IoChevronDown className={styles.icon} />}
+                        rightSectionWidth={30}
+                        styles={{ rightSection: { pointerEvents: 'none' } }}
+                        data={options?.languages}
+                        {...tablePropertiesForm.getInputProps('language')}
+                    />
+                    <Group position="apart">
+                        <Button
+                            disabled={fetching || formIsClean}
+                            type="reset"
+                            radius="xl"
+                            variant="default"
+                            uppercase
+                        >
+                            Reset
+                        </Button>
+                        <Button
+                            disabled={fetching || formIsClean}
+                            type="submit"
+                            radius="xl"
+                            variant="light"
+                            uppercase
+                        >
+                            Apply
+                        </Button>
+                    </Group>
+                </form>
+            </ScrollArea>
         </Paper>
     );
 }

@@ -17,7 +17,7 @@ import { graphql } from '#gql';
 import styles from './styles.module.css';
 
 const createDatasetMutationDocument = graphql(/* GraphQL */`
-    mutation createDatasetMutation($file: Upload!) {
+    mutation CreateDatasetMutation($file: Upload!) {
         createDataset(data: {file: $file}) {
             errors
             ok
