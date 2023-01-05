@@ -7,5 +7,9 @@
     .workspace {
         display: flex;
         flex-grow: 1;
+        flex-wrap: wrap;
+        gap: var(--mantine-spacing-xl);
+        align-content: flex-start;
+        padding: var(--mantine-spacing-xl);
     }
 }
