@@ -91,6 +91,10 @@ export default function Data() {
 
     const hasData = isDefined(data?.datasets?.results);
 
+    const importedTables = data?.datasets?.results?.map((dataset) => (
+        dataset?.tables?.filter((table) => table.isAddedToWorkspace)
+    )).flat();
+
     return (
         <div className={styles.dataPage}>
             <Navbar
@@ -147,6 +151,7 @@ export default function Data() {
             )}
             {!fetching && hasData && (
                 <Workspace
+                    tables={importedTables}
                     selectedTable={selectedTable}
                     onImportCancel={handleTableImportCancel}
                     onImportSuccess={handleTableImportSuccess}
