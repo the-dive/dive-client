@@ -19,7 +19,6 @@ import {
     MdOutlineSearch,
     MdOutlineTableChart,
 } from 'react-icons/md';
-import { isDefined } from '@togglecorp/fujs';
 import { graphql } from '#gql';
 
 import Workspace from './Workspace';
@@ -89,11 +88,7 @@ export default function Data() {
         setSelectedTable(undefined);
     }, []);
 
-    const hasData = isDefined(data?.datasets?.results);
-
-    const importedTables = data?.datasets?.results?.map((dataset) => (
-        dataset?.tables?.filter((table) => table.isAddedToWorkspace)
-    )).flat();
+    const hasData = (data?.datasets?.totalCount ?? 0) > 0;
 
     return (
         <div className={styles.dataPage}>
@@ -151,7 +146,6 @@ export default function Data() {
             )}
             {!fetching && hasData && (
                 <Workspace
-                    tables={importedTables}
                     selectedTable={selectedTable}
                     onImportCancel={handleTableImportCancel}
                     onImportSuccess={handleTableImportSuccess}

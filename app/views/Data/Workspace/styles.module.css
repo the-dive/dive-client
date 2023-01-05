@@ -6,6 +6,7 @@
 
     .workspace {
         display: flex;
+        position: relative;
         flex-grow: 1;
         flex-wrap: wrap;
         gap: var(--mantine-spacing-xl);

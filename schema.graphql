@@ -271,6 +271,35 @@ type Query {
     """Django object unique identification field"""
     id: ID!
   ): TableType
+
+  """Table list"""
+  tables(
+    isAddedToWorkspace: Boolean
+
+    """
+    A string or comma delimited string values that indicate the default ordering when obtaining lists of objects.
+    """
+    ordering: String
+
+    """A page number within the result paginated set. Default: 1"""
+    page: Int = 1
+
+    """Number of results to return per page. Default 'page_size': 20"""
+    pageSize: Int
+    statuses: [TableStatusEnum!]
+  ): TableListType
+}
+
+type TableListType {
+  """Page Number"""
+  page: Int
+
+  """Page Size"""
+  pageSize: Int
+  results: [TableType!]
+
+  """Total count of matches elements"""
+  totalCount: Int
 }
 
 input TablePropertiesInputType {
@@ -302,6 +331,14 @@ type TablePropertiesType {
 
 """An enumeration."""
 enum TableStatus {
+  """Extracted"""
+  EXTRACTED
+
+  """Pending"""
+  PENDING
+}
+
+enum TableStatusEnum {
   """Extracted"""
   EXTRACTED
 

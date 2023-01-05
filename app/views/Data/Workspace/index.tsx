@@ -1,14 +1,15 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
     Button,
     Divider,
+    LoadingOverlay,
     Menu,
     Paper,
     Text,
 } from '@mantine/core';
 import { MdOutlineTableChart } from 'react-icons/md';
 import { IoChevronDown } from 'react-icons/io5';
-import { useMutation } from 'urql';
+import { useQuery, useMutation } from 'urql';
 import { TableType } from '#gql/graphql';
 import { graphql } from '#gql';
 
@@ -16,7 +17,6 @@ import ImportTable from './ImportTable';
 import styles from './styles.module.css';
 
 interface Props {
-    tables?: TableType[];
     selectedTable?: string;
     onImportCancel: () => void;
     onImportSuccess: () => void;
@@ -30,9 +30,24 @@ const removeTableFromWorkspaceMutationDocument = graphql(/* GraphQL */`
         result {
           id
           name
-          previewData
           isAddedToWorkspace
         }
+      }
+    }
+`);
+
+const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
+    query TablesAddedToWorkspace {
+      tables(isAddedToWorkspace: true) {
+        results {
+          id
+          isAddedToWorkspace
+          name
+          previewData
+          status
+          statusDisplay
+        }
+        totalCount
       }
     }
 `);
@@ -103,16 +118,36 @@ function WorkspaceItem(props: WorkspaceItemProps) {
 
 export default function Workspace(props: Props) {
     const {
-        tables,
         selectedTable,
         onImportCancel,
         onImportSuccess,
     } = props;
+    /*
+    *  URQL's Document Caching Gotcha
+    *  If we request a list of data, and the API returns an empty list, then the
+    *  cache won't be able to see the __typename of said list and invalidate it.
+    *  Supplying additionalTypenames to the context of your query, will invalidate
+    *  the query even when the list is empty.
+    */
+    const context = useMemo(() => ({ additionalTypenames: ['TableType'] }), []);
+
+    const [
+        tablesAddedToWorkspaceResult,
+    ] = useQuery({
+        query: tablesAddedToWorkspaceQueryDocument,
+        context,
+    });
+
+    const {
+        data,
+        fetching,
+    } = tablesAddedToWorkspaceResult;
 
     return (
         <Paper className={styles.workspaceContainer}>
             <Paper className={styles.workspace}>
-                {tables?.map((table) => (
+                <LoadingOverlay visible={fetching} />
+                {data?.tables?.results?.map((table) => (
                     <WorkspaceItem
                         key={table.id}
                         table={table}
