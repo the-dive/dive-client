@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
     Button,
     Divider,
@@ -7,7 +7,9 @@ import {
     Paper,
     Text,
 } from '@mantine/core';
-import { MdOutlineTableChart } from 'react-icons/md';
+import {
+    MdOutlineTableChart,
+} from 'react-icons/md';
 import { IoChevronDown } from 'react-icons/io5';
 import { useQuery, useMutation } from 'urql';
 import { TableType } from '#gql/graphql';
@@ -15,6 +17,7 @@ import { graphql } from '#gql';
 
 import ImportTable from './ImportTable';
 import styles from './styles.module.css';
+import WorkTable from './WorkTable';
 
 interface Props {
     selectedTable?: string;
@@ -54,11 +57,13 @@ const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
 
 interface WorkspaceItemProps {
     table: TableType;
+    onClickTable: () => void;
 }
 
 function WorkspaceItem(props: WorkspaceItemProps) {
     const {
         table,
+        onClickTable,
     } = props;
 
     const [
@@ -78,6 +83,7 @@ function WorkspaceItem(props: WorkspaceItemProps) {
                 loading={removeTableFromWorkspaceResult.fetching}
                 leftIcon={<MdOutlineTableChart />}
                 disabled={removeTableFromWorkspaceResult.fetching}
+                onClick={onClickTable}
             >
                 <Text color="dark">
                     {table.name}
@@ -130,6 +136,7 @@ export default function Workspace(props: Props) {
     *  the query even when the list is empty.
     */
     const context = useMemo(() => ({ additionalTypenames: ['TableType'] }), []);
+    const [tablePreview, setTablePreview] = useState(false);
 
     const [
         tablesAddedToWorkspaceResult,
@@ -143,6 +150,10 @@ export default function Workspace(props: Props) {
         fetching,
     } = tablesAddedToWorkspaceResult;
 
+    const onTableClick = useCallback(() => {
+        setTablePreview(true);
+    }, []);
+
     return (
         <Paper className={styles.workspaceContainer}>
             <Paper className={styles.workspace}>
@@ -151,6 +162,7 @@ export default function Workspace(props: Props) {
                     <WorkspaceItem
                         key={table.id}
                         table={table}
+                        onClickTable={onTableClick}
                     />
                 ))}
             </Paper>
@@ -165,6 +177,10 @@ export default function Workspace(props: Props) {
                     />
                 </>
             )}
+            {tablePreview && (
+                <WorkTable />
+            )}
         </Paper>
+
     );
 }
