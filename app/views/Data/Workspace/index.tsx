@@ -20,9 +20,8 @@ import { graphql } from '#gql';
 
 import SetRelationshipModal from './SetRelationshipModal';
 import ImportTable from './ImportTable';
-import WorkTable from './WorkTable';
-
 import styles from './styles.module.css';
+import WorkTable from './WorkTable';
 
 interface Props {
     selectedTable?: string;
@@ -320,5 +319,6 @@ export default function Workspace(props: Props) {
                 </>
             )}
         </Paper>
+
     );
 }
