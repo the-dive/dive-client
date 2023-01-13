@@ -39,6 +39,20 @@ const removeTableFromWorkspaceMutationDocument = graphql(/* GraphQL */`
     }
 `);
 
+const dublicateTableFromWorkspaceMutationDocument = graphql(/* GraphQL */`
+    mutation DublicateTableFromWorkspace($id: ID!) {
+        cloneTable(id: $id) {
+        errors
+        ok
+        result {
+          id
+          name
+          isAddedToWorkspace
+        }
+      }
+    }
+`);
+
 const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
     query TablesAddedToWorkspace {
       tables(isAddedToWorkspace: true) {
@@ -71,9 +85,18 @@ function WorkspaceItem(props: WorkspaceItemProps) {
         removeTableFromWorkspace,
     ] = useMutation(removeTableFromWorkspaceMutationDocument);
 
+    const [
+        dublicateTableFromWorkspaceResult,
+        dublicateTableFromWorkspace,
+    ] = useMutation(dublicateTableFromWorkspaceMutationDocument);
+
     const handleRemoveButtonClick = useCallback(() => {
         removeTableFromWorkspace({ id: table.id });
     }, [removeTableFromWorkspace, table.id]);
+
+    const handleDublicateButtonClick = useCallback(() => {
+        dublicateTableFromWorkspace({ id: table.id });
+    }, [dublicateTableFromWorkspace, table.id]);
 
     return (
         <Button.Group key={table.id}>
@@ -105,7 +128,12 @@ function WorkspaceItem(props: WorkspaceItemProps) {
                 </Menu.Target>
                 <Menu.Dropdown>
                     <Menu.Item>Refresh</Menu.Item>
-                    <Menu.Item>Duplicate</Menu.Item>
+                    <Menu.Item
+                        disabled={dublicateTableFromWorkspaceResult.fetching}
+                        onClick={handleDublicateButtonClick}
+                    >
+                        Duplicate
+                    </Menu.Item>
                     <Menu.Item>Rename</Menu.Item>
                     <Menu.Item>Color</Menu.Item>
                     <Menu.Divider />
@@ -178,9 +206,11 @@ export default function Workspace(props: Props) {
                 </>
             )}
             {tablePreview && (
-                <WorkTable />
+                <>
+                    <Divider />
+                    <WorkTable />
+                </>
             )}
         </Paper>
-
     );
 }

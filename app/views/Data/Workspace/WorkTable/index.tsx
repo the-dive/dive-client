@@ -2,6 +2,9 @@ import {
     ActionIcon,
     Group,
     Paper,
+    Divider,
+    Table,
+    ScrollArea,
 } from '@mantine/core';
 import {
     MdOutlineTableChart,
@@ -16,35 +19,75 @@ import styles from './styles.module.css';
 
 export default function WorkTable() {
     return (
-        <Paper>
-            <Group
-                spacing={1}
-                className={styles.tableViewProperties}
+        <>
+            <Paper
+                p="md"
+                className={styles.tabView}
             >
-                <ActionIcon>
-                    <MdOutlineTableChart />
-                </ActionIcon>
-                <ActionIcon>
-                    <MdList />
-                </ActionIcon>
-                <ActionIcon>
-                    <MdOutlineGridView />
-                </ActionIcon>
-            </Group>
-            <Group>
-                <ActionIcon>
-                    <MdOutlineTag />
-                </ActionIcon>
-                <ActionIcon>
-                    <MdOutlineCalendarToday />
-                </ActionIcon>
-                <ActionIcon>
-                    <MdOutlineLanguage />
-                </ActionIcon>
-                <ActionIcon>
-                    <MdOutlineLocationOn />
-                </ActionIcon>
-            </Group>
-        </Paper>
+                <Group
+                    spacing={1}
+                    className={styles.tableViewProperties}
+                >
+                    <ActionIcon
+                        color="dark"
+                        size="md"
+                        variant="transparent"
+                    >
+                        <MdOutlineTableChart />
+                    </ActionIcon>
+                    <ActionIcon
+                        color="dark"
+                        size="md"
+                        variant="transparent"
+                    >
+                        <MdList />
+                    </ActionIcon>
+                    <ActionIcon
+                        color="dark"
+                        size="md"
+                        variant="transparent"
+                    >
+                        <MdOutlineGridView />
+                    </ActionIcon>
+                </Group>
+                <Divider orientation="vertical" />
+                <Group
+                    className={styles.tableStatus}
+                >
+                    <ActionIcon
+                        variant="transparent"
+                        className={styles.tableStatusButton}
+                    >
+                        1
+                        <MdOutlineTag />
+                    </ActionIcon>
+                    <ActionIcon
+                        variant="transparent"
+                        className={styles.tableStatusButton}
+                    >
+                        1
+                        <MdOutlineCalendarToday />
+                    </ActionIcon>
+                    <ActionIcon
+                        variant="transparent"
+                        className={styles.tableStatusButton}
+                    >
+                        1
+                        <MdOutlineLanguage />
+                    </ActionIcon>
+                    <ActionIcon
+                        variant="transparent"
+                        className={styles.tableStatusButton}
+                    >
+                        1
+                        <MdOutlineLocationOn />
+                    </ActionIcon>
+                </Group>
+            </Paper>
+            <Divider />
+            <ScrollArea>
+                <Table striped withColumnBorders />
+            </ScrollArea>
+        </>
     );
 }
