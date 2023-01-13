@@ -5,7 +5,7 @@ function ProtectedLayout() {
     return (
         <AppShell
             padding="xs"
-            header={<Header height={60} p="xs"><Image height={30} width={100} src="/assets/DiveRegular.svg" /></Header>}
+            header={<Header height={60} p="xs"><Image height={30} width={100} src="/assets/DiveRegular.svg" alt="Dive" /></Header>}
             styles={(theme) => ({
                 main: {
                     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],

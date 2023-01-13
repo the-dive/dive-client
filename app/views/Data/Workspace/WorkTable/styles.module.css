@@ -1,0 +1,15 @@
+.tab-view {
+    display: flex;
+    gap: 1rem;
+    
+    .table-view-properties {
+        border-radius: 5px;
+        background-color: var(--mantine-color-gray-2);
+    }
+
+    .table-status-button {
+        font-size: 14px;
+        background-color: var(--mantine-color-gray-2);
+        color: var(--mantine-color-gray-6);
+    }
+}
