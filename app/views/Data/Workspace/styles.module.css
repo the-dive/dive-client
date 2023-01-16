@@ -14,3 +14,17 @@
         padding: var(--mantine-spacing-xl);
     }
 }
+
+.rename-input {
+    width: 9rem;
+
+    .rename-submit-refresh{
+        display: flex;
+        gap: var(--mantine-spacing-xs);
+        font-size: var(--mantine-font-size-md);
+        
+        .rename-submit {
+            color: var(--mantine-color-green-5);
+        }
+    }
+}
