@@ -6,9 +6,12 @@ import {
     Menu,
     Paper,
     Text,
+    TextInput,
 } from '@mantine/core';
 import {
     MdOutlineTableChart,
+    MdDone,
+    MdRefresh,
 } from 'react-icons/md';
 import { IoChevronDown } from 'react-icons/io5';
 import { useQuery, useMutation } from 'urql';
@@ -53,6 +56,20 @@ const dublicateTableFromWorkspaceMutationDocument = graphql(/* GraphQL */`
     }
 `);
 
+const renameTableFromWorkspaceMutationDocument = graphql(/* GraphQL */`
+    mutation RenameTableFromWorkspace($id: ID! $name: String!) {
+        renameTable(id: $id, name: $name) {
+            errors
+            ok
+            result {
+                id
+                name
+                isAddedToWorkspace
+            }
+        }
+    }   
+`);
+
 const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
     query TablesAddedToWorkspace {
       tables(isAddedToWorkspace: true) {
@@ -80,6 +97,9 @@ function WorkspaceItem(props: WorkspaceItemProps) {
         onClickTable,
     } = props;
 
+    const [isRename, setIsRename] = useState(false);
+    const [renameTable, setRenameTable] = useState(table.name);
+
     const [
         removeTableFromWorkspaceResult,
         removeTableFromWorkspace,
@@ -90,6 +110,11 @@ function WorkspaceItem(props: WorkspaceItemProps) {
         dublicateTableFromWorkspace,
     ] = useMutation(dublicateTableFromWorkspaceMutationDocument);
 
+    const [
+        renameTableFromWorkspaceResult,
+        renameTableFromWorkspace,
+    ] = useMutation(renameTableFromWorkspaceMutationDocument);
+
     const handleRemoveButtonClick = useCallback(() => {
         removeTableFromWorkspace({ id: table.id });
     }, [removeTableFromWorkspace, table.id]);
@@ -97,6 +122,27 @@ function WorkspaceItem(props: WorkspaceItemProps) {
     const handleDublicateButtonClick = useCallback(() => {
         dublicateTableFromWorkspace({ id: table.id });
     }, [dublicateTableFromWorkspace, table.id]);
+
+    const handleRenameButtonClick = useCallback(() => {
+        setIsRename(true);
+    }, []);
+
+    const handleRenameOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setRenameTable(e.target?.value);
+    }, []);
+
+    const handleRefreshButtonClick = useCallback(() => {
+        setRenameTable(table.name);
+    }, [table.name]);
+
+    const handleRenameSubmit = useCallback(() => {
+        renameTableFromWorkspace({ id: table.id, name: renameTable });
+        setIsRename(false);
+    }, [
+        table,
+        renameTableFromWorkspace,
+        renameTable,
+    ]);
 
     return (
         <Button.Group key={table.id}>
@@ -108,44 +154,71 @@ function WorkspaceItem(props: WorkspaceItemProps) {
                 disabled={removeTableFromWorkspaceResult.fetching}
                 onClick={onClickTable}
             >
-                <Text color="dark">
-                    {table.name}
-                </Text>
+                {!isRename
+                    ? (
+                        <Text color="dark">
+                            {table.name}
+                        </Text>
+                    ) : (
+                        <TextInput
+                            autoFocus
+                            className={styles.renameInput}
+                            value={renameTable}
+                            onChange={handleRenameOnChange}
+                            variant="unstyled"
+                            rightSection={(
+                                <div className={styles.renameSubmitRefresh}>
+                                    <MdDone
+                                        className={styles.renameSubmit}
+                                        onClick={handleRenameSubmit}
+                                    />
+                                    <MdRefresh onClick={handleRefreshButtonClick} />
+                                </div>
+                            )}
+                        />
+                    )}
             </Button>
-            <Menu
-                width={130}
-                shadow="md"
-                withinPortal
-                disabled={removeTableFromWorkspaceResult.fetching}
-            >
-                <Menu.Target>
-                    <Button
-                        variant="light"
-                        color="gray"
-                    >
-                        <IoChevronDown />
-                    </Button>
-                </Menu.Target>
-                <Menu.Dropdown>
-                    <Menu.Item>Refresh</Menu.Item>
-                    <Menu.Item
-                        disabled={dublicateTableFromWorkspaceResult.fetching}
-                        onClick={handleDublicateButtonClick}
-                    >
-                        Duplicate
-                    </Menu.Item>
-                    <Menu.Item>Rename</Menu.Item>
-                    <Menu.Item>Color</Menu.Item>
-                    <Menu.Divider />
-                    <Menu.Item
-                        color="red"
-                        disabled={removeTableFromWorkspaceResult.fetching}
-                        onClick={handleRemoveButtonClick}
-                    >
-                        Remove
-                    </Menu.Item>
-                </Menu.Dropdown>
-            </Menu>
+            {!isRename && (
+                <Menu
+                    width={130}
+                    shadow="md"
+                    withinPortal
+                    disabled={removeTableFromWorkspaceResult.fetching}
+                >
+                    <Menu.Target>
+                        <Button
+                            variant="light"
+                            color="gray"
+                        >
+                            <IoChevronDown />
+                        </Button>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        <Menu.Item>Refresh</Menu.Item>
+                        <Menu.Item
+                            disabled={dublicateTableFromWorkspaceResult.fetching}
+                            onClick={handleDublicateButtonClick}
+                        >
+                            Duplicate
+                        </Menu.Item>
+                        <Menu.Item
+                            disabled={renameTableFromWorkspaceResult.fetching}
+                            onClick={handleRenameButtonClick}
+                        >
+                            Rename
+                        </Menu.Item>
+                        <Menu.Item>Color</Menu.Item>
+                        <Menu.Divider />
+                        <Menu.Item
+                            color="red"
+                            disabled={removeTableFromWorkspaceResult.fetching}
+                            onClick={handleRemoveButtonClick}
+                        >
+                            Remove
+                        </Menu.Item>
+                    </Menu.Dropdown>
+                </Menu>
+            )}
         </Button.Group>
     );
 }
