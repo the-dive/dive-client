@@ -20,13 +20,21 @@
 
     .right-section {
         position: unset;
+
+    :global {
+        .mantine-TextInput-wrapper {
+            display: flex;
+        }
+
+        .mantine-TextInput-rightSection{
+            position: unset;
+        }
     }
 
     .rename-submit-refresh{
         display: flex;
         gap: var(--mantine-spacing-xs);
         font-size: var(--mantine-font-size-md);
-
         .rename-submit {
             color: var(--mantine-color-green-5);
         }
