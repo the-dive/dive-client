@@ -218,6 +218,7 @@ type Mutation {
   cloneTable(id: ID!): CloneTable
   createDataset(data: CreateDatasetInputType!): CreateDataset
   deleteTableFromWorkspace(id: ID!): DeleteTableFromWorkspace
+  renameTable(id: ID!, name: String!): RenameTable
   updateTableProperties(data: TablePropertiesInputType!, id: ID!): UpdateTableProperties
 }
 
@@ -288,6 +289,12 @@ type Query {
     pageSize: Int
     statuses: [TableStatusEnum!]
   ): TableListType
+}
+
+type RenameTable {
+  errors: [GenericScalar!]
+  ok: Boolean
+  result: TableType
 }
 
 type TableListType {
