@@ -20,8 +20,9 @@ import { graphql } from '#gql';
 
 import SetRelationshipModal from './SetRelationshipModal';
 import ImportTable from './ImportTable';
-import styles from './styles.module.css';
 import WorkTable from './WorkTable';
+
+import styles from './styles.module.css';
 
 interface Props {
     selectedTable?: string;
