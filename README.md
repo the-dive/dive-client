@@ -12,11 +12,11 @@ VITE_GRAPHQL_API_ENDPOINT=http://localhost:8000/graphql/
 VITE_GRAPHQL_CODEGEN_ENDPOINT=http://localhost:8000/graphql/
 ```
 
-Just run and visit http://localhost:5173
-
 ```bash
 pnpm dev
 ```
+
+visit http://localhost:5173
 
 ### Build
 
