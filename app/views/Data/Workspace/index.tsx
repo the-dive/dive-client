@@ -18,6 +18,7 @@ import { useQuery, useMutation } from 'urql';
 import { TableType } from '#gql/graphql';
 import { graphql } from '#gql';
 
+import SetRelationshipModal from './SetRelationshipModal';
 import ImportTable from './ImportTable';
 import styles from './styles.module.css';
 import WorkTable from './WorkTable';
@@ -42,8 +43,8 @@ const removeTableFromWorkspaceMutationDocument = graphql(/* GraphQL */`
     }
 `);
 
-const dublicateTableFromWorkspaceMutationDocument = graphql(/* GraphQL */`
-    mutation DublicateTableFromWorkspace($id: ID!) {
+const duplicateTableFromWorkspaceMutationDocument = graphql(/* GraphQL */`
+    mutation DuplicateTableFromWorkspace($id: ID!) {
         cloneTable(id: $id) {
         errors
         ok
@@ -67,7 +68,7 @@ const renameTableFromWorkspaceMutationDocument = graphql(/* GraphQL */`
                 isAddedToWorkspace
             }
         }
-    }   
+    }
 `);
 
 const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
@@ -89,16 +90,18 @@ const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
 interface WorkspaceItemProps {
     table: TableType;
     onClickTable: () => void;
+    onSetRelation: (id: string) => void;
 }
 
 function WorkspaceItem(props: WorkspaceItemProps) {
     const {
         table,
         onClickTable,
+        onSetRelation,
     } = props;
 
-    const [isRename, setIsRename] = useState(false);
-    const [renameTable, setRenameTable] = useState(table.name);
+    const [isRenameClicked, setIsRenameClicked] = useState(false);
+    const [tableName, setTableName] = useState(table.name);
 
     const [
         removeTableFromWorkspaceResult,
@@ -106,9 +109,9 @@ function WorkspaceItem(props: WorkspaceItemProps) {
     ] = useMutation(removeTableFromWorkspaceMutationDocument);
 
     const [
-        dublicateTableFromWorkspaceResult,
-        dublicateTableFromWorkspace,
-    ] = useMutation(dublicateTableFromWorkspaceMutationDocument);
+        duplicateTableFromWorkspaceResult,
+        duplicateTableFromWorkspace,
+    ] = useMutation(duplicateTableFromWorkspaceMutationDocument);
 
     const [
         renameTableFromWorkspaceResult,
@@ -119,30 +122,37 @@ function WorkspaceItem(props: WorkspaceItemProps) {
         removeTableFromWorkspace({ id: table.id });
     }, [removeTableFromWorkspace, table.id]);
 
-    const handleDublicateButtonClick = useCallback(() => {
-        dublicateTableFromWorkspace({ id: table.id });
-    }, [dublicateTableFromWorkspace, table.id]);
+    const handleDuplicateButtonClick = useCallback(() => {
+        duplicateTableFromWorkspace({ id: table.id });
+    }, [duplicateTableFromWorkspace, table.id]);
 
     const handleRenameButtonClick = useCallback(() => {
-        setIsRename(true);
+        setIsRenameClicked(true);
     }, []);
 
     const handleRenameOnChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setRenameTable(e.target?.value);
+        setTableName(e.target?.value);
     }, []);
 
     const handleRefreshButtonClick = useCallback(() => {
-        setRenameTable(table.name);
+        setTableName(table.name);
     }, [table.name]);
 
     const handleRenameSubmit = useCallback(() => {
-        renameTableFromWorkspace({ id: table.id, name: renameTable });
-        setIsRename(false);
+        renameTableFromWorkspace({ id: table.id, name: tableName }).then((response) => {
+            if (response.data?.renameTable?.ok) {
+                setIsRenameClicked(false);
+            }
+        });
     }, [
         table,
         renameTableFromWorkspace,
-        renameTable,
+        tableName,
     ]);
+
+    const handleSetRelation = useCallback(() => {
+        onSetRelation(table.id);
+    }, [table.id, onSetRelation]);
 
     return (
         <Button.Group key={table.id}>
@@ -154,36 +164,39 @@ function WorkspaceItem(props: WorkspaceItemProps) {
                 disabled={removeTableFromWorkspaceResult.fetching}
                 onClick={onClickTable}
             >
-                {!isRename
-                    ? (
-                        <Text color="dark">
-                            {table.name}
-                        </Text>
-                    ) : (
-                        <TextInput
-                            autoFocus
-                            className={styles.renameInput}
-                            value={renameTable}
-                            onChange={handleRenameOnChange}
-                            variant="unstyled"
-                            rightSection={(
-                                <div className={styles.renameSubmitRefresh}>
-                                    <MdDone
-                                        className={styles.renameSubmit}
-                                        onClick={handleRenameSubmit}
-                                    />
-                                    <MdRefresh onClick={handleRefreshButtonClick} />
-                                </div>
-                            )}
-                        />
-                    )}
+                {isRenameClicked ? (
+                    <TextInput
+                        autoFocus
+                        classNames={{
+                            wrapper: styles.renameInput,
+                            rightSection: styles.rightSection,
+                        }}
+                        value={tableName}
+                        onChange={handleRenameOnChange}
+                        disabled={renameTableFromWorkspaceResult.fetching}
+                        variant="unstyled"
+                        rightSection={(
+                            <div className={styles.renameSubmitRefresh}>
+                                <MdDone
+                                    className={styles.renameSubmit}
+                                    onClick={handleRenameSubmit}
+                                />
+                                <MdRefresh onClick={handleRefreshButtonClick} />
+                            </div>
+                        )}
+                    />
+                ) : (
+                    <Text color="dark">
+                        {table.name}
+                    </Text>
+                )}
             </Button>
-            {!isRename && (
+            {!isRenameClicked && (
                 <Menu
                     width={130}
                     shadow="md"
                     withinPortal
-                    disabled={removeTableFromWorkspaceResult.fetching}
+                    disabled={removeTableFromWorkspaceResult.fetching || isRenameClicked}
                 >
                     <Menu.Target>
                         <Button
@@ -194,10 +207,9 @@ function WorkspaceItem(props: WorkspaceItemProps) {
                         </Button>
                     </Menu.Target>
                     <Menu.Dropdown>
-                        <Menu.Item>Refresh</Menu.Item>
                         <Menu.Item
-                            disabled={dublicateTableFromWorkspaceResult.fetching}
-                            onClick={handleDublicateButtonClick}
+                            disabled={duplicateTableFromWorkspaceResult.fetching}
+                            onClick={handleDuplicateButtonClick}
                         >
                             Duplicate
                         </Menu.Item>
@@ -207,7 +219,12 @@ function WorkspaceItem(props: WorkspaceItemProps) {
                         >
                             Rename
                         </Menu.Item>
-                        <Menu.Item>Color</Menu.Item>
+                        <Menu.Item
+                            disabled={renameTableFromWorkspaceResult.fetching}
+                            onClick={handleSetRelation}
+                        >
+                            Set relation
+                        </Menu.Item>
                         <Menu.Divider />
                         <Menu.Item
                             color="red"
@@ -238,6 +255,7 @@ export default function Workspace(props: Props) {
     */
     const context = useMemo(() => ({ additionalTypenames: ['TableType'] }), []);
     const [tablePreview, setTablePreview] = useState(false);
+    const [relationTableId, setRelationTableId] = useState<string>();
 
     const [
         tablesAddedToWorkspaceResult,
@@ -250,6 +268,14 @@ export default function Workspace(props: Props) {
         data,
         fetching,
     } = tablesAddedToWorkspaceResult;
+
+    const handleSetRelation = useCallback((id: string) => {
+        setRelationTableId(id);
+    }, []);
+
+    const handleModalClose = useCallback(() => {
+        setRelationTableId(undefined);
+    }, []);
 
     const onTableClick = useCallback(() => {
         setTablePreview(true);
@@ -264,8 +290,14 @@ export default function Workspace(props: Props) {
                         key={table.id}
                         table={table}
                         onClickTable={onTableClick}
+                        onSetRelation={handleSetRelation}
                     />
                 ))}
+                <SetRelationshipModal
+                    selectedTableId={relationTableId}
+                    onClose={handleModalClose}
+                    tables={data?.tables?.results}
+                />
             </Paper>
             {selectedTable && (
                 <>
