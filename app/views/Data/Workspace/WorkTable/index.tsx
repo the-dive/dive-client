@@ -1,3 +1,4 @@
+import { TableType } from '#gql/graphql';
 import {
     ActionIcon,
     Group,
@@ -5,6 +6,7 @@ import {
     Divider,
     Table,
     ScrollArea,
+    Menu,
 } from '@mantine/core';
 import {
     MdOutlineTableChart,
@@ -17,7 +19,56 @@ import {
 } from 'react-icons/md';
 import styles from './styles.module.css';
 
-export default function WorkTable() {
+interface Props {
+    table: TableType
+}
+
+interface Column {
+    key: string;
+    label: string;
+}
+
+type Row = Record<string, string>;
+
+export default function WorkTable(props: Props) {
+    const { table } = props;
+
+    const colsKeys: string[] = table?.previewData?.columns?.map((col: Column) => col.key);
+
+    const rows = table?.previewData?.rows.map((row: Row, rowIndex: number) => {
+        const cells = colsKeys?.map((key) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <td key={`${table.id}-row-${rowIndex}-cell-${key}`}>
+                {row[key]}
+            </td>
+        ));
+
+        return (
+            // eslint-disable-next-line react/no-array-index-key
+            <tr key={`${table.id}-row-${rowIndex}`}>
+                {cells}
+            </tr>
+        );
+    });
+
+    const columns = table?.previewData?.columns?.map((col: Column) => (
+        <th key={`${table.id}-${col.key}`}>
+            <Menu>
+                <Menu.Target>
+                    <ActionIcon className={styles.columnHeader}>
+                        {col.label}
+                    </ActionIcon>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                    <Menu.Item>Number</Menu.Item>
+                    <Menu.Item>String</Menu.Item>
+                    <Menu.Item>Date</Menu.Item>
+                    <Menu.Item>Date and Time</Menu.Item>
+                </Menu.Dropdown>
+            </Menu>
+        </th>
+    ));
     return (
         <>
             <Paper
@@ -86,7 +137,16 @@ export default function WorkTable() {
             </Paper>
             <Divider />
             <ScrollArea>
-                <Table striped withColumnBorders />
+                <Table striped withColumnBorders>
+                    <thead>
+                        <tr>
+                            {columns}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows}
+                    </tbody>
+                </Table>
             </ScrollArea>
         </>
     );

@@ -89,8 +89,8 @@ const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
 
 interface WorkspaceItemProps {
     table: TableType;
-    onClickTable: () => void;
     onSetRelation: (id: string) => void;
+    onClickTable: (table: TableType) => void;
 }
 
 function WorkspaceItem(props: WorkspaceItemProps) {
@@ -154,6 +154,10 @@ function WorkspaceItem(props: WorkspaceItemProps) {
         onSetRelation(table.id);
     }, [table.id, onSetRelation]);
 
+    const handleClick = () => {
+        onClickTable(table);
+    };
+
     return (
         <Button.Group key={table.id}>
             <Button
@@ -162,7 +166,7 @@ function WorkspaceItem(props: WorkspaceItemProps) {
                 loading={removeTableFromWorkspaceResult.fetching}
                 leftIcon={<MdOutlineTableChart />}
                 disabled={removeTableFromWorkspaceResult.fetching}
-                onClick={onClickTable}
+                onClick={handleClick}
             >
                 {isRenameClicked ? (
                     <TextInput
@@ -254,8 +258,8 @@ export default function Workspace(props: Props) {
     *  the query even when the list is empty.
     */
     const context = useMemo(() => ({ additionalTypenames: ['TableType'] }), []);
-    const [tablePreview, setTablePreview] = useState(false);
     const [relationTableId, setRelationTableId] = useState<string>();
+    const [tablePreview, setTablePreview] = useState<TableType>();
 
     const [
         tablesAddedToWorkspaceResult,
@@ -277,8 +281,8 @@ export default function Workspace(props: Props) {
         setRelationTableId(undefined);
     }, []);
 
-    const onTableClick = useCallback(() => {
-        setTablePreview(true);
+    const onTableClick = useCallback((table: TableType) => {
+        setTablePreview(table);
     }, []);
 
     return (
@@ -312,10 +316,12 @@ export default function Workspace(props: Props) {
                     />
                 </>
             )}
-            {tablePreview && (
+            {!selectedTable && tablePreview && (
                 <>
                     <Divider />
-                    <WorkTable />
+                    <WorkTable
+                        table={tablePreview}
+                    />
                 </>
             )}
         </Paper>

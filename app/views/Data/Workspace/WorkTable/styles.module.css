@@ -13,3 +13,10 @@
         color: var(--mantine-color-gray-6);
     }
 }
+
+.column-header {
+    font-size: var(--mantine-font-size-sm);
+    color: var(--mantine-color-dark-9);
+    font-weight: 700;
+    width: max-content;
+}
