@@ -4,6 +4,7 @@ import {
     Flex,
     Modal,
     Select,
+    SelectItem,
     Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -16,6 +17,7 @@ import styles from './styles.module.css';
 interface TableRelationshipFormType {
     fromTable: string | undefined;
     toTable: string | undefined;
+    joinType: 'innerJoin' | 'union' | undefined;
 }
 
 interface Props {
@@ -23,6 +25,11 @@ interface Props {
     tables?: TableType[] | undefined | null;
     onClose: () => void;
 }
+
+const relationTypes: SelectItem[] = [
+    { value: 'innerJoin', label: 'Inner Join' },
+    { value: 'union', label: 'Union' },
+];
 
 export default function SetRelationshipModal(props: Props) {
     const {
@@ -35,6 +42,7 @@ export default function SetRelationshipModal(props: Props) {
         initialValues: {
             fromTable: undefined,
             toTable: undefined,
+            joinType: 'innerJoin',
         },
     });
 
@@ -83,17 +91,28 @@ export default function SetRelationshipModal(props: Props) {
                 <Flex
                     gap="md"
                 >
+                    <Flex
+                        gap="md"
+                        direction="column"
+                    >
+                        <Select
+                            readOnly
+                            disabled
+                            data={selectedTable}
+                            {...tableRelationshipForm.getInputProps('fromTable')}
+                        />
+                        <Select
+                            data={otherTables}
+                            rightSection={<IoChevronDown className={styles.icon} />}
+                            rightSectionWidth={30}
+                            {...tableRelationshipForm.getInputProps('toTable')}
+                        />
+                    </Flex>
                     <Select
-                        readOnly
-                        disabled
-                        data={selectedTable}
-                        {...tableRelationshipForm.getInputProps('fromTable')}
-                    />
-                    <Select
-                        data={otherTables}
+                        data={relationTypes}
                         rightSection={<IoChevronDown className={styles.icon} />}
                         rightSectionWidth={30}
-                        {...tableRelationshipForm.getInputProps('toTable')}
+                        {...tableRelationshipForm.getInputProps('joinType')}
                     />
                 </Flex>
                 <Button
