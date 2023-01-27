@@ -90,18 +90,22 @@ export default function SetRelationshipModal(props: Props) {
             >
                 <Flex
                     gap="md"
+                    direction="column"
                 >
                     <Flex
                         gap="md"
-                        direction="column"
+                        direction="row"
                     >
                         <Select
+                            label="Relation from"
                             readOnly
                             disabled
                             data={selectedTable}
                             {...tableRelationshipForm.getInputProps('fromTable')}
                         />
                         <Select
+                            label="Relation to"
+                            placeholder="Select Table"
                             data={otherTables}
                             rightSection={<IoChevronDown className={styles.icon} />}
                             rightSectionWidth={30}
@@ -109,21 +113,36 @@ export default function SetRelationshipModal(props: Props) {
                         />
                     </Flex>
                     <Select
+                        label="Relation"
                         data={relationTypes}
                         rightSection={<IoChevronDown className={styles.icon} />}
                         rightSectionWidth={30}
                         {...tableRelationshipForm.getInputProps('joinType')}
                     />
                 </Flex>
-                <Button
-                    disabled={false}
-                    type="submit"
-                    radius="xl"
-                    variant="light"
-                    uppercase
+                <Flex
+                    gap="xl"
+                    direction="row"
                 >
-                    Apply
-                </Button>
+                    <Button
+                        disabled={false}
+                        type="submit"
+                        radius="xl"
+                        variant="default"
+                        uppercase
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        disabled={false}
+                        type="submit"
+                        radius="xl"
+                        variant="light"
+                        uppercase
+                    >
+                        Apply
+                    </Button>
+                </Flex>
             </form>
         </Modal>
     );
