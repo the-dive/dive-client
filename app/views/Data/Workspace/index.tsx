@@ -294,11 +294,13 @@ export default function Workspace(props: Props) {
                         onSetRelation={handleSetRelation}
                     />
                 ))}
-                <SetRelationshipModal
-                    selectedTableId={relationTableId}
-                    onClose={handleModalClose}
-                    tables={data?.tables?.results}
-                />
+                {relationTableId && (
+                    <SetRelationshipModal
+                        selectedTableId={relationTableId}
+                        onClose={handleModalClose}
+                        tables={data?.tables?.results}
+                    />
+                )}
             </Paper>
             {selectedTable && (
                 <>

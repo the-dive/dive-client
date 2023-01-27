@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
     Button,
     Flex,
@@ -15,14 +15,14 @@ import { TableType } from '#gql/graphql';
 import styles from './styles.module.css';
 
 interface TableRelationshipFormType {
-    fromTable: string | undefined;
-    toTable: string | undefined;
-    joinType: 'innerJoin' | 'union' | undefined;
+    fromTable: string;
+    toTable: string | null;
+    joinType: 'innerJoin' | 'union';
 }
 
 interface Props {
-    selectedTableId: string | undefined;
-    tables?: TableType[] | undefined | null;
+    selectedTableId: string;
+    tables: TableType[] | null | undefined;
     onClose: () => void;
 }
 
@@ -40,19 +40,11 @@ export default function SetRelationshipModal(props: Props) {
 
     const tableRelationshipForm = useForm<TableRelationshipFormType>({
         initialValues: {
-            fromTable: undefined,
-            toTable: undefined,
+            fromTable: selectedTableId,
+            toTable: null,
             joinType: 'innerJoin',
         },
     });
-
-    const { setFieldValue } = tableRelationshipForm;
-
-    useEffect(() => {
-        if (selectedTableId) {
-            setFieldValue('fromTable', selectedTableId);
-        }
-    }, [selectedTableId, setFieldValue]);
 
     const selectedTable = useMemo(() => {
         const table = tables?.find((t) => t.id === selectedTableId);
@@ -65,6 +57,7 @@ export default function SetRelationshipModal(props: Props) {
     ), [tables, selectedTableId]);
 
     const handleFormSubmit = useCallback((values: any) => { // TODO use proper types
+        // eslint-disable-next-line no-console
         console.warn('values', values);
     }, []);
 
@@ -87,6 +80,7 @@ export default function SetRelationshipModal(props: Props) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 onSubmit={tableRelationshipForm.onSubmit(handleFormSubmit)} // TODO: graphql types
+                onReset={tableRelationshipForm.onReset}
             >
                 <Flex
                     gap="md"
@@ -126,7 +120,7 @@ export default function SetRelationshipModal(props: Props) {
                 >
                     <Button
                         disabled={false}
-                        type="submit"
+                        type="reset"
                         radius="xl"
                         variant="default"
                         uppercase
