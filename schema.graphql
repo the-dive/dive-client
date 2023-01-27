@@ -313,7 +313,7 @@ input TablePropertiesInputType {
   headerLevel: String!
   language: String!
   timezone: String!
-  treatTheseAsNa: String
+  treatTheseAsNa: String!
   trimWhitespaces: Boolean!
 }
 
