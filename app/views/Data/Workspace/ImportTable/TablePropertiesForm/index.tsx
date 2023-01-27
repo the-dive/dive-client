@@ -10,6 +10,7 @@ import {
     Title,
     LoadingOverlay,
     ScrollArea,
+    SelectItem,
 } from '@mantine/core';
 import { useMutation } from 'urql';
 import { IoChevronDown } from 'react-icons/io5';
@@ -184,14 +185,14 @@ export default function TablePropertiesForm(props: Props) {
                 >
                     <Select
                         label="Header Levels"
-                        data={options?.headerLevels}
+                        data={options?.headerLevels as SelectItem[]} // TODO: fix types in server
                         rightSection={<IoChevronDown className={styles.icon} />}
                         styles={{ rightSection: { pointerEvents: 'none' } }}
                         {...tablePropertiesForm.getInputProps('headerLevel')}
                     />
                     <Select
                         label="Time Zone (Optional)"
-                        data={options?.timezones}
+                        data={options?.timezones as SelectItem[]} // TODO: fix types in server
                         rightSection={<IoChevronDown className={styles.icon} />}
                         styles={{ rightSection: { pointerEvents: 'none' } }}
                         {...tablePropertiesForm.getInputProps('timezone')}
@@ -210,7 +211,7 @@ export default function TablePropertiesForm(props: Props) {
                         rightSection={<IoChevronDown className={styles.icon} />}
                         rightSectionWidth={30}
                         styles={{ rightSection: { pointerEvents: 'none' } }}
-                        data={options?.languages}
+                        data={options?.languages as SelectItem[]} // TODO: fix types in server
                         {...tablePropertiesForm.getInputProps('language')}
                     />
                     <Group position="apart">
