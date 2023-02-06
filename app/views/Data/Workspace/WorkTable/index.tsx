@@ -1,4 +1,4 @@
-import { TableType } from '#gql/graphql';
+import { WorkTableQuery } from '#gql/graphql';
 import {
     ActionIcon,
     Group,
@@ -7,7 +7,11 @@ import {
     Table,
     ScrollArea,
     Menu,
+    Collapse,
 } from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
+import { useCallback } from 'react';
+import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import {
     MdOutlineTableChart,
     MdList,
@@ -16,15 +20,17 @@ import {
     MdOutlineLanguage,
     MdOutlineCalendarToday,
     MdOutlineLocationOn,
+    MdGrid3X3,
+    MdHdrAuto,
 } from 'react-icons/md';
 import styles from './styles.module.css';
 
 interface Props {
-    table: TableType
+    table: WorkTableQuery['table']
 }
 
 interface Column {
-    key: string;
+    key: number;
     label: string;
 }
 
@@ -33,9 +39,11 @@ type Row = Record<string, string>;
 export default function WorkTable(props: Props) {
     const { table } = props;
 
-    const colsKeys: string[] = table?.previewData?.columns?.map((col: Column) => col.key);
+    const [opened, toggleOpened] = useToggle([true, false]);
 
-    const rows = table?.previewData?.rows.map((row: Row, rowIndex: number) => {
+    const colsKeys: string[] = table?.dataColumnStats.map((col: Column) => col.key);
+
+    const rows = table?.dataRows.map((row: Row, rowIndex: number) => {
         const cells = colsKeys?.map((key) => (
             // eslint-disable-next-line react/no-array-index-key
             <td key={`${table.id}-row-${rowIndex}-cell-${key}`}>
@@ -51,7 +59,7 @@ export default function WorkTable(props: Props) {
         );
     });
 
-    const columns = table?.previewData?.columns?.map((col: Column) => (
+    const columns = table?.dataColumnStats.map((col: Column) => (
         <th key={`${table.id}-${col.key}`}>
             <Menu>
                 <Menu.Target>
@@ -61,14 +69,19 @@ export default function WorkTable(props: Props) {
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                    <Menu.Item>Number</Menu.Item>
-                    <Menu.Item>String</Menu.Item>
-                    <Menu.Item>Date</Menu.Item>
+                    <Menu.Item icon={<MdGrid3X3 />}>Number</Menu.Item>
+                    <Menu.Item icon={<MdHdrAuto />}>String</Menu.Item>
+                    <Menu.Item icon={<MdOutlineCalendarToday />}>Date</Menu.Item>
                     <Menu.Item>Date and Time</Menu.Item>
                 </Menu.Dropdown>
             </Menu>
         </th>
     ));
+
+    const handleCollapseClick = useCallback(() => {
+        toggleOpened();
+    }, [toggleOpened]);
+
     return (
         <>
             <Paper
@@ -134,20 +147,32 @@ export default function WorkTable(props: Props) {
                         <MdOutlineLocationOn />
                     </ActionIcon>
                 </Group>
+                <ActionIcon
+                    color="dark"
+                    size="md"
+                    variant="transparent"
+                    onClick={handleCollapseClick}
+                >
+                    {opened ? <IoChevronUp /> : <IoChevronDown />}
+                </ActionIcon>
             </Paper>
             <Divider />
-            <ScrollArea>
-                <Table striped withColumnBorders>
-                    <thead>
-                        <tr>
-                            {columns}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows}
-                    </tbody>
-                </Table>
-            </ScrollArea>
+            <Collapse in={opened} className={styles.collapse}>
+                <Paper className={styles.tableContainer} withBorder>
+                    <ScrollArea className={styles.scrollArea}>
+                        <Table striped withColumnBorders>
+                            <thead>
+                                <tr>
+                                    {columns}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rows}
+                            </tbody>
+                        </Table>
+                    </ScrollArea>
+                </Paper>
+            </Collapse>
         </>
     );
 }

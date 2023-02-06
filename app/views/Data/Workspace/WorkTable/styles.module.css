@@ -1,7 +1,7 @@
 .tab-view {
     display: flex;
     gap: 1rem;
-    
+
     .table-view-properties {
         border-radius: 5px;
         background-color: var(--mantine-color-gray-2);
@@ -19,4 +19,16 @@
     color: var(--mantine-color-dark-9);
     font-weight: 700;
     width: max-content;
+}
+
+.table-container {
+    display: flex;
+    flex-grow: 1;
+    overflow: auto;
+    max-height: 60vh;
+
+    .scroll-area {
+        display: flex;
+        flex-grow: 1;
+    }
 }

@@ -87,17 +87,29 @@ const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
     }
 `);
 
+const workspaceTableQueryDocument = graphql(/* GraphQL */ `
+    query workTable($id: ID!) {
+        table(id: $id) {
+            id
+            name
+            isAddedToWorkspace
+            dataColumnStats
+            dataRows
+        }
+    }
+`);
+
 interface WorkspaceItemProps {
     table: TableType;
     onSetRelation: (id: string) => void;
-    onClickTable: (table: TableType) => void;
+    onTableClick: (id: string) => void;
 }
 
 function WorkspaceItem(props: WorkspaceItemProps) {
     const {
         table,
-        onClickTable,
         onSetRelation,
+        onTableClick,
     } = props;
 
     const [isRenameClicked, setIsRenameClicked] = useState(false);
@@ -154,9 +166,9 @@ function WorkspaceItem(props: WorkspaceItemProps) {
         onSetRelation(table.id);
     }, [table.id, onSetRelation]);
 
-    const handleClick = () => {
-        onClickTable(table);
-    };
+    const handleTableClick = useCallback(() => {
+        onTableClick(table.id);
+    }, [table.id, onTableClick]);
 
     return (
         <Button.Group key={table.id}>
@@ -166,7 +178,7 @@ function WorkspaceItem(props: WorkspaceItemProps) {
                 loading={removeTableFromWorkspaceResult.fetching}
                 leftIcon={<MdOutlineTableChart />}
                 disabled={removeTableFromWorkspaceResult.fetching}
-                onClick={handleClick}
+                onClick={handleTableClick}
             >
                 {isRenameClicked ? (
                     <TextInput
@@ -259,8 +271,7 @@ export default function Workspace(props: Props) {
     */
     const context = useMemo(() => ({ additionalTypenames: ['TableType'] }), []);
     const [relationTableId, setRelationTableId] = useState<string>();
-    const [tablePreview, setTablePreview] = useState<TableType>();
-
+    const [tableId, setTableId] = useState<string>();
     const [
         tablesAddedToWorkspaceResult,
     ] = useQuery({
@@ -268,40 +279,55 @@ export default function Workspace(props: Props) {
         context,
     });
 
+    const [
+        workspaceTableResult,
+    ] = useQuery({
+        query: workspaceTableQueryDocument,
+        variables: {
+            id: tableId ?? '',
+        },
+    });
+
     const {
-        data,
-        fetching,
+        data: workspaceTable,
+    } = workspaceTableResult;
+
+    const {
+        data: workspaceData,
+        fetching: fetchingWorkspace,
     } = tablesAddedToWorkspaceResult;
 
     const handleSetRelation = useCallback((id: string) => {
         setRelationTableId(id);
     }, []);
 
+    const handleTableClick = useCallback((id: string) => {
+        setTableId(id);
+    }, []);
+
     const handleModalClose = useCallback(() => {
         setRelationTableId(undefined);
     }, []);
 
-    const onTableClick = useCallback((table: TableType) => {
-        setTablePreview(table);
-    }, []);
+    // console.log('Bool', !selectedTable, 'Table', workspaceTable);
 
     return (
         <Paper className={styles.workspaceContainer}>
             <Paper className={styles.workspace}>
-                <LoadingOverlay visible={fetching} />
-                {data?.tables?.results?.map((table) => (
+                <LoadingOverlay visible={fetchingWorkspace} />
+                {workspaceData?.tables?.results?.map((table) => (
                     <WorkspaceItem
                         key={table.id}
                         table={table}
-                        onClickTable={onTableClick}
                         onSetRelation={handleSetRelation}
+                        onTableClick={handleTableClick}
                     />
                 ))}
                 {relationTableId && (
                     <SetRelationshipModal
                         selectedTableId={relationTableId}
                         onClose={handleModalClose}
-                        tables={data?.tables?.results}
+                        tables={workspaceData?.tables?.results}
                     />
                 )}
             </Paper>
@@ -316,11 +342,11 @@ export default function Workspace(props: Props) {
                     />
                 </>
             )}
-            {!selectedTable && tablePreview && (
+            {(!selectedTable && workspaceTable?.table) && (
                 <>
                     <Divider />
                     <WorkTable
-                        table={tablePreview}
+                        table={workspaceTable.table}
                     />
                 </>
             )}
