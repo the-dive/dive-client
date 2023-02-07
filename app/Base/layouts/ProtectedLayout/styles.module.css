@@ -1,0 +1,8 @@
+.navButton {
+    width: 50%;
+
+    .action-icon {
+        width: unset;
+        font-weight: 700;
+    }
+}
