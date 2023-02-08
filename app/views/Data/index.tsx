@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 import {
     ActionIcon,
     Group,
@@ -57,10 +57,18 @@ const datasetsQueryDocument = graphql(/* GraphQL */`
 export default function Data() {
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedTable, setSelectedTable] = useState<string | undefined>();
+    /*
+     *  URQL's Document Caching Gotcha
+     *  If we request a list of data, and the API returns an empty list, then the
+     *  cache won't be able to see the __typename of said list and invalidate it.
+     *  We should refetch dataset when new data is added for the first time.
+     */
+    const context = useMemo(() => ({ additionalTypenames: ['CreateDataset'] }), []);
     const [
         datasetResults,
     ] = useQuery({
         query: datasetsQueryDocument,
+        context,
     });
 
     const {

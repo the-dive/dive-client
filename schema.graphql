@@ -209,8 +209,8 @@ schema (one of the key benefits of GraphQL).
 scalar JSONString
 
 type KeyLabelType {
-  key: String
-  label: String
+  key: String!
+  label: String!
 }
 
 type Mutation {
