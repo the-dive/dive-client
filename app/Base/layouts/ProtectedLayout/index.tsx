@@ -11,6 +11,7 @@ import {
     MdOutlineHome,
 } from 'react-icons/md';
 import { Outlet } from 'react-router-dom';
+import ActionNavLink from '#base/components/ActionNavLink';
 import styles from './styles.module.css';
 
 function ProtectedLayout() {
@@ -24,19 +25,27 @@ function ProtectedLayout() {
                     >
                         <Image height={30} width={100} src="/assets/DiveRegular.svg" alt="Dive" />
                         <Flex justify="center" align="center" gap="xl" className={styles.navButton}>
-                            <ActionIcon className={styles.actionIcon}>
-                                <Flex align="center" gap="xs">
-                                    <MdOutlineHome size={20} />
-                                    HOME
-                                </Flex>
-                            </ActionIcon>
+                            <ActionNavLink
+                                route="/"
+                            >
+                                <ActionIcon className={styles.actionIcon}>
+                                    <Flex align="center" gap="xs">
+                                        <MdOutlineHome size={20} />
+                                        HOME
+                                    </Flex>
+                                </ActionIcon>
+                            </ActionNavLink>
                             <Divider orientation="vertical" />
-                            <ActionIcon className={styles.actionIcon}>
-                                <Flex align="center" gap="xs">
-                                    <MdOutlineDns size={20} />
-                                    DATA
-                                </Flex>
-                            </ActionIcon>
+                            <ActionNavLink
+                                route="/data"
+                            >
+                                <ActionIcon className={styles.actionIcon}>
+                                    <Flex align="center" gap="xs">
+                                        <MdOutlineDns size={20} />
+                                        DATA
+                                    </Flex>
+                                </ActionIcon>
+                            </ActionNavLink>
                         </Flex>
                     </Flex>
                 </Header>
