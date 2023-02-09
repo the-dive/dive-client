@@ -87,18 +87,6 @@ const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
     }
 `);
 
-const workspaceTableQueryDocument = graphql(/* GraphQL */ `
-    query workTable($id: ID!) {
-        table(id: $id) {
-            id
-            name
-            isAddedToWorkspace
-            dataColumnStats
-            dataRows
-        }
-    }
-`);
-
 interface WorkspaceItemProps {
     table: TableType;
     onSetRelation: (id: string) => void;
@@ -279,19 +267,6 @@ export default function Workspace(props: Props) {
         context,
     });
 
-    const [
-        workspaceTableResult,
-    ] = useQuery({
-        query: workspaceTableQueryDocument,
-        variables: {
-            id: tableId ?? '',
-        },
-    });
-
-    const {
-        data: workspaceTable,
-    } = workspaceTableResult;
-
     const {
         data: workspaceData,
         fetching: fetchingWorkspace,
@@ -308,8 +283,6 @@ export default function Workspace(props: Props) {
     const handleModalClose = useCallback(() => {
         setRelationTableId(undefined);
     }, []);
-
-    // console.log('Bool', !selectedTable, 'Table', workspaceTable);
 
     return (
         <Paper className={styles.workspaceContainer}>
@@ -342,11 +315,11 @@ export default function Workspace(props: Props) {
                     />
                 </>
             )}
-            {(!selectedTable && workspaceTable?.table) && (
+            {(!selectedTable && tableId) && (
                 <>
                     <Divider />
                     <WorkTable
-                        table={workspaceTable.table}
+                        tableId={tableId}
                     />
                 </>
             )}

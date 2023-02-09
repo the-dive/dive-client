@@ -1,4 +1,4 @@
-import { WorkTableQuery } from '#gql/graphql';
+import { useCallback } from 'react';
 import {
     ActionIcon,
     Group,
@@ -10,7 +10,6 @@ import {
     Collapse,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
-import { useCallback } from 'react';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import {
     MdOutlineTableChart,
@@ -23,10 +22,12 @@ import {
     MdGrid3X3,
     MdHdrAuto,
 } from 'react-icons/md';
+import { useQuery } from 'urql';
+import { graphql } from '#gql';
 import styles from './styles.module.css';
 
 interface Props {
-    table: WorkTableQuery['table']
+    tableId: string;
 }
 
 interface Column {
@@ -36,31 +37,56 @@ interface Column {
 
 type Row = Record<string, string>;
 
+const workspaceTableQueryDocument = graphql(/* GraphQL */ `
+    query workTable($id: ID!) {
+        table(id: $id) {
+            id
+            name
+            isAddedToWorkspace
+            dataColumnStats
+            dataRows
+        }
+    }
+`);
+
 export default function WorkTable(props: Props) {
-    const { table } = props;
+    const { tableId } = props;
+
+    const [
+        workspaceTableResult,
+    ] = useQuery({
+        query: workspaceTableQueryDocument,
+        variables: {
+            id: tableId,
+        },
+    });
+
+    const {
+        data: workspaceTable,
+    } = workspaceTableResult;
 
     const [opened, toggleOpened] = useToggle([true, false]);
 
-    const colsKeys: string[] = table?.dataColumnStats.map((col: Column) => col.key);
+    const colsKeys: number[] = workspaceTable?.table?.dataColumnStats.map((col: Column) => col.key);
 
-    const rows = table?.dataRows.map((row: Row, rowIndex: number) => {
+    const rows = workspaceTable?.table?.dataRows.map((row: Row, rowIndex: number) => {
         const cells = colsKeys?.map((key) => (
             // eslint-disable-next-line react/no-array-index-key
-            <td key={`${table.id}-row-${rowIndex}-cell-${key}`}>
+            <td key={`${tableId}-row-${rowIndex}-cell-${key}`}>
                 {row[key]}
             </td>
         ));
 
         return (
             // eslint-disable-next-line react/no-array-index-key
-            <tr key={`${table.id}-row-${rowIndex}`}>
+            <tr key={`${tableId}-row-${rowIndex}`}>
                 {cells}
             </tr>
         );
     });
 
-    const columns = table?.dataColumnStats.map((col: Column) => (
-        <th key={`${table.id}-${col.key}`}>
+    const columns = workspaceTable?.table?.dataColumnStats.map((col: Column) => (
+        <th key={`${tableId}-${col.key}`}>
             <Menu>
                 <Menu.Target>
                     <ActionIcon className={styles.columnHeader}>
