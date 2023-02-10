@@ -20,9 +20,8 @@ import { graphql } from '#gql';
 
 import SetRelationshipModal from './SetRelationshipModal';
 import ImportTable from './ImportTable';
-import WorkTable from './WorkTable';
-
 import styles from './styles.module.css';
+import WorkTable from './WorkTable';
 
 interface Props {
     selectedTable?: string;
@@ -90,15 +89,15 @@ const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
 
 interface WorkspaceItemProps {
     table: TableType;
-    onClickTable: () => void;
     onSetRelation: (id: string) => void;
+    onTableClick: (id: string) => void;
 }
 
 function WorkspaceItem(props: WorkspaceItemProps) {
     const {
         table,
-        onClickTable,
         onSetRelation,
+        onTableClick,
     } = props;
 
     const [isRenameClicked, setIsRenameClicked] = useState(false);
@@ -155,6 +154,10 @@ function WorkspaceItem(props: WorkspaceItemProps) {
         onSetRelation(table.id);
     }, [table.id, onSetRelation]);
 
+    const handleTableClick = useCallback(() => {
+        onTableClick(table.id);
+    }, [table.id, onTableClick]);
+
     return (
         <Button.Group key={table.id}>
             <Button
@@ -163,7 +166,7 @@ function WorkspaceItem(props: WorkspaceItemProps) {
                 loading={removeTableFromWorkspaceResult.fetching}
                 leftIcon={<MdOutlineTableChart />}
                 disabled={removeTableFromWorkspaceResult.fetching}
-                onClick={onClickTable}
+                onClick={handleTableClick}
             >
                 {isRenameClicked ? (
                     <TextInput
@@ -255,9 +258,8 @@ export default function Workspace(props: Props) {
     *  the query even when the list is empty.
     */
     const context = useMemo(() => ({ additionalTypenames: ['TableType'] }), []);
-    const [tablePreview, setTablePreview] = useState(false);
     const [relationTableId, setRelationTableId] = useState<string>();
-
+    const [tableId, setTableId] = useState<string>();
     const [
         tablesAddedToWorkspaceResult,
     ] = useQuery({
@@ -266,39 +268,39 @@ export default function Workspace(props: Props) {
     });
 
     const {
-        data,
-        fetching,
+        data: workspaceData,
+        fetching: fetchingWorkspace,
     } = tablesAddedToWorkspaceResult;
 
     const handleSetRelation = useCallback((id: string) => {
         setRelationTableId(id);
     }, []);
 
-    const handleModalClose = useCallback(() => {
-        setRelationTableId(undefined);
+    const handleTableClick = useCallback((id: string) => {
+        setTableId(id);
     }, []);
 
-    const onTableClick = useCallback(() => {
-        setTablePreview(true);
+    const handleModalClose = useCallback(() => {
+        setRelationTableId(undefined);
     }, []);
 
     return (
         <Paper className={styles.workspaceContainer}>
             <Paper className={styles.workspace}>
-                <LoadingOverlay visible={fetching} />
-                {data?.tables?.results?.map((table) => (
+                <LoadingOverlay visible={fetchingWorkspace} />
+                {workspaceData?.tables?.results?.map((table) => (
                     <WorkspaceItem
                         key={table.id}
                         table={table}
-                        onClickTable={onTableClick}
                         onSetRelation={handleSetRelation}
+                        onTableClick={handleTableClick}
                     />
                 ))}
                 {relationTableId && (
                     <SetRelationshipModal
                         selectedTableId={relationTableId}
                         onClose={handleModalClose}
-                        tables={data?.tables?.results}
+                        tables={workspaceData?.tables?.results}
                     />
                 )}
             </Paper>
@@ -313,12 +315,15 @@ export default function Workspace(props: Props) {
                     />
                 </>
             )}
-            {tablePreview && (
+            {(!selectedTable && tableId) && (
                 <>
                     <Divider />
-                    <WorkTable />
+                    <WorkTable
+                        tableId={tableId}
+                    />
                 </>
             )}
         </Paper>
+
     );
 }
