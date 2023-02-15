@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     ActionIcon,
     Group,
@@ -8,8 +8,11 @@ import {
     ScrollArea,
     Menu,
     Collapse,
+    SegmentedControl,
+    Flex,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
+import { _cs } from '@togglecorp/fujs';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import {
     MdOutlineTableChart,
@@ -31,11 +34,12 @@ interface Props {
 }
 
 interface Column {
-    key: number;
+    key: string;
     label: string;
 }
 
 type Row = Record<string, string>;
+type TabTypes = 'tableView' | 'listView' | 'gridView';
 
 const workspaceTableQueryDocument = graphql(/* GraphQL */ `
     query workTable($id: ID!) {
@@ -53,6 +57,11 @@ export default function WorkTable(props: Props) {
     const { tableId } = props;
 
     const [
+        activeTab,
+        setActiveTab,
+    ] = useState<TabTypes>('tableView');
+
+    const [
         workspaceTableResult,
     ] = useQuery({
         query: workspaceTableQueryDocument,
@@ -68,6 +77,53 @@ export default function WorkTable(props: Props) {
     const [opened, toggleOpened] = useToggle([true, false]);
 
     const colsKeys: number[] = workspaceTable?.table?.dataColumnStats.map((col: Column) => col.key);
+
+    const listColKeyValue = [
+        {
+            key: 'key',
+            label: '',
+        },
+        {
+            key: 'type',
+            label: 'Type',
+        },
+        {
+            key: 'na_count',
+            label: 'Nulls',
+        },
+        {
+            key: 'max_length',
+            label: 'Max length',
+        },
+        {
+            key: 'min_length',
+            label: 'Min length',
+        },
+        {
+            key: 'total_count',
+            label: 'Total count',
+        },
+        {
+            key: 'unique_count',
+            label: 'Unique count',
+        },
+        {
+            key: 'min',
+            label: 'Min',
+        },
+        {
+            key: 'max',
+            label: 'Max',
+        },
+        {
+            key: 'median',
+            label: 'Median',
+        },
+        {
+            key: 'std_deviation',
+            label: 'Standard deviation',
+        },
+    ];
 
     const rows = workspaceTable?.table?.dataRows.map((row: Row, rowIndex: number) => {
         const cells = colsKeys?.map((key) => (
@@ -104,9 +160,36 @@ export default function WorkTable(props: Props) {
         </th>
     ));
 
+    const listColKeys: string[] = listColKeyValue.map((col: Column) => (col.key));
+
+    const listRows = workspaceTable?.table?.dataColumnStats.map((row: Row, rowIndex: number) => {
+        const cells = listColKeys.map((key) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <td key={`${tableId}-row-${rowIndex}-list-cell-${key}`}>
+                {row[key]}
+            </td>
+        ));
+        return (
+            // eslint-disable-next-line react/no-array-index-key
+            <tr key={`${tableId}-list-row-${rowIndex}`}>
+                {cells}
+            </tr>
+        );
+    });
+
+    const listColumn = listColKeyValue.map((list) => (
+        <th key={`${tableId}-list-${list.key}`}>
+            {list.label}
+        </th>
+    ));
+
     const handleCollapseClick = useCallback(() => {
         toggleOpened();
     }, [toggleOpened]);
+
+    const handleTabChange = useCallback((e: React.BaseSyntheticEvent) => {
+        setActiveTab(e.currentTarget.name);
+    }, [setActiveTab]);
 
     return (
         <>
@@ -122,6 +205,11 @@ export default function WorkTable(props: Props) {
                         color="dark"
                         size="md"
                         variant="transparent"
+                        name="tableView"
+                        onClick={handleTabChange}
+                        className={_cs(activeTab === 'tableView'
+                            ? styles.actionIconActive
+                            : styles.action)}
                     >
                         <MdOutlineTableChart />
                     </ActionIcon>
@@ -129,6 +217,11 @@ export default function WorkTable(props: Props) {
                         color="dark"
                         size="md"
                         variant="transparent"
+                        name="listView"
+                        onClick={handleTabChange}
+                        className={_cs(activeTab === 'listView'
+                            ? styles.actionIconActive
+                            : styles.action)}
                     >
                         <MdList />
                     </ActionIcon>
@@ -136,6 +229,11 @@ export default function WorkTable(props: Props) {
                         color="dark"
                         size="md"
                         variant="transparent"
+                        name="gridView"
+                        onClick={handleTabChange}
+                        className={_cs(activeTab === 'gridView'
+                            ? styles.actionIconActive
+                            : styles.action)}
                     >
                         <MdOutlineGridView />
                     </ActionIcon>
@@ -183,22 +281,56 @@ export default function WorkTable(props: Props) {
                 </ActionIcon>
             </Paper>
             <Divider />
-            <Collapse in={opened} className={styles.collapse}>
-                <Paper className={styles.tableContainer} withBorder>
-                    <ScrollArea className={styles.scrollArea}>
-                        <Table striped withColumnBorders>
-                            <thead>
-                                <tr>
-                                    {columns}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rows}
-                            </tbody>
-                        </Table>
-                    </ScrollArea>
-                </Paper>
-            </Collapse>
+            {activeTab === 'tableView' && (
+                <Collapse in={opened} className={styles.collapse}>
+                    <Paper className={styles.tableContainer} withBorder>
+                        <ScrollArea className={styles.scrollArea}>
+                            <Table striped withColumnBorders>
+                                <thead>
+                                    <tr>
+                                        {columns}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {rows}
+                                </tbody>
+                            </Table>
+                        </ScrollArea>
+                    </Paper>
+                </Collapse>
+            )}
+            {activeTab === 'listView' && (
+                <Collapse in={opened} className={styles.collapse}>
+                    <Flex
+                        justify="center"
+                        className={styles.segmentedFlex}
+                        p="sm"
+                    >
+                        <SegmentedControl
+                            radius="lg"
+                            color="brand"
+                            data={[
+                                { value: 'summary_stats', label: 'Summary stats' },
+                                { value: 'framework_setup', label: 'Framework setup', disabled: true },
+                            ]}
+                        />
+                    </Flex>
+                    <Paper className={styles.tableContainer} withBorder>
+                        <ScrollArea className={styles.scrollArea}>
+                            <Table striped withColumnBorders>
+                                <thead>
+                                    <tr>
+                                        {listColumn}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {listRows}
+                                </tbody>
+                            </Table>
+                        </ScrollArea>
+                    </Paper>
+                </Collapse>
+            )}
         </>
     );
 }

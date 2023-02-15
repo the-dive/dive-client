@@ -1,3 +1,13 @@
+"""An enumeration."""
+enum ActionEnum {
+  cast_column
+}
+
+input ActionInputType {
+  actionName: ActionEnum
+  params: [String]
+}
+
 type AddTableToWorkSpace {
   errors: [GenericScalar!]
   ok: Boolean
@@ -219,7 +229,14 @@ type Mutation {
   createDataset(data: CreateDatasetInputType!): CreateDataset
   deleteTableFromWorkspace(id: ID!): DeleteTableFromWorkspace
   renameTable(id: ID!, name: String!): RenameTable
+  tableAction(action: ActionInputType!, id: ID!): PerformTableAction
   updateTableProperties(data: TablePropertiesInputType!, id: ID!): UpdateTableProperties
+}
+
+type PerformTableAction {
+  errors: [GenericScalar!]
+  ok: Boolean
+  result: Int
 }
 
 type PropertiesOptionsType {
@@ -356,6 +373,7 @@ enum TableStatusEnum {
 type TableType {
   """"""
   clonedFrom: TableType
+  columnsCount: Int
   dataColumnStats: GenericScalar
   dataRows: GenericScalar
 
@@ -369,6 +387,7 @@ type TableType {
   name: String!
   previewData: GenericScalar
   properties: TablePropertiesType
+  rowsCount: Int
 
   """"""
   status: TableStatus!
