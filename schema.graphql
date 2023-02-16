@@ -314,6 +314,22 @@ type RenameTable {
   result: TableType
 }
 
+type TableColumnStatsType {
+  key: String!
+  label: String!
+  max: Float
+  maxLength: Int
+  mean: Float
+  median: Float
+  min: Float
+  minLength: Int
+  naCount: Int!
+  stdDeviation: Float
+  totalCount: Int!
+  type: String!
+  uniqueCount: Int
+}
+
 type TableListType {
   """Page Number"""
   page: Int
@@ -374,7 +390,7 @@ type TableType {
   """"""
   clonedFrom: TableType
   columnsCount: Int
-  dataColumnStats: GenericScalar
+  dataColumnStats: [TableColumnStatsType]
   dataRows: GenericScalar
 
   """"""
