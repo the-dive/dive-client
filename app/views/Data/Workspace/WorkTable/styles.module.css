@@ -5,6 +5,11 @@
     .table-view-properties {
         border-radius: 5px;
         background-color: var(--mantine-color-gray-2);
+
+        .action-icon-active {
+            color: white;
+            background-color: var(--mantine-color-brand-5);
+        }
     }
 
     .table-status-button {
