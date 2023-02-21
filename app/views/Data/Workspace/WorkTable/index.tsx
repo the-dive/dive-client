@@ -25,7 +25,7 @@ import {
     MdGrid3X3,
     MdHdrAuto,
 } from 'react-icons/md';
-import { useQuery } from 'urql';
+import { useMutation, useQuery } from 'urql';
 import { graphql } from '#gql';
 import { WorkTableQuery } from '#gql/graphql';
 import styles from './styles.module.css';
@@ -36,7 +36,6 @@ interface Props {
 
 type Row = Record<string, string>;
 type TabTypes = 'tableView' | 'listView' | 'gridView';
-
 type Column = NonNullable<NonNullable<NonNullable<WorkTableQuery['table']>['dataColumnStats']>[0]>;
 
 interface ListColKeyValue {
@@ -47,6 +46,10 @@ const listColKeyValue: ListColKeyValue[] = [
     {
         key: 'key',
         label: '',
+    },
+    {
+        key: 'label',
+        label: 'Label',
     },
     {
         key: 'type',
@@ -100,22 +103,44 @@ const workspaceTableQueryDocument = graphql(/* GraphQL */ `
             id
             name
             isAddedToWorkspace
+            columnsCount
+            rowsCount
             dataRows
             dataColumnStats {
                 key
                 label
-                type
-                totalCount
-                uniqueCount
-                stdDeviation
-                minLength
-                naCount
-                min
-                median
+                max
                 mean
                 maxLength
-                max
+                median
+                min
+                minLength
+                naCount
+                stdDeviation
+                totalCount
+                type
+                uniqueCount
             }
+        }
+    }
+`);
+
+const tableActionMutationDocument = graphql(/* graphql */`
+    mutation changeTableAction(
+        $id: ID!
+        $key: String
+        $type: String
+    ) {
+        tableAction(
+            id: $id,
+            action: {
+                actionName: cast_column,
+                params: [$key, $type]
+            }
+        ) {
+            result
+            ok
+            errors
         }
     }
 `);
@@ -129,7 +154,13 @@ export default function WorkTable(props: Props) {
     ] = useState<TabTypes>('tableView');
 
     const [
+        ,
+        tableAction,
+    ] = useMutation(tableActionMutationDocument);
+
+    const [
         workspaceTableResult,
+        reexecuteQuery,
     ] = useQuery({
         query: workspaceTableQueryDocument,
         variables: {
@@ -139,7 +170,9 @@ export default function WorkTable(props: Props) {
 
     const {
         data: workspaceTable,
-    } = workspaceTableResult;
+    } = useMemo(() => (
+        workspaceTableResult
+    ), [workspaceTableResult]);
 
     const [opened, toggleOpened] = useToggle([true, false]);
 
@@ -172,6 +205,24 @@ export default function WorkTable(props: Props) {
         colsKeys,
     ]);
 
+    const getClickHandler = useCallback((
+        key: string | undefined,
+    ) => (e: React.BaseSyntheticEvent) => (
+        tableAction({
+            id: tableId,
+            key,
+            type: e.currentTarget.name,
+        }).then((result) => {
+            if (result.data?.tableAction?.ok) {
+                reexecuteQuery({ requestPolicy: 'network-only' });
+            }
+        })
+    ), [
+        tableAction,
+        tableId,
+        reexecuteQuery,
+    ]);
+
     const columns = useMemo(() => (
         workspaceTable?.table?.dataColumnStats?.map((col) => (
             <th key={`${tableId}-${col?.key}`}>
@@ -183,8 +234,20 @@ export default function WorkTable(props: Props) {
                     </Menu.Target>
 
                     <Menu.Dropdown>
-                        <Menu.Item icon={<MdGrid3X3 />}>Number</Menu.Item>
-                        <Menu.Item icon={<MdHdrAuto />}>String</Menu.Item>
+                        <Menu.Item
+                            name="number"
+                            icon={<MdGrid3X3 />}
+                            onClick={getClickHandler(col?.key)}
+                        >
+                            Number
+                        </Menu.Item>
+                        <Menu.Item
+                            name="string"
+                            icon={<MdHdrAuto />}
+                            onClick={getClickHandler(col?.key)}
+                        >
+                            String
+                        </Menu.Item>
                         <Menu.Item icon={<MdOutlineCalendarToday />}>Date</Menu.Item>
                         <Menu.Item>Date and Time</Menu.Item>
                     </Menu.Dropdown>
@@ -194,6 +257,7 @@ export default function WorkTable(props: Props) {
     ), [
         workspaceTable,
         tableId,
+        getClickHandler,
     ]);
 
     const listColKeys = useMemo(() => (

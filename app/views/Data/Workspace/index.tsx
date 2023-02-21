@@ -81,6 +81,7 @@ const tablesAddedToWorkspaceQueryDocument = graphql(/* GraphQL */`
           previewData
           status
           statusDisplay
+          originalName
         }
         totalCount
       }

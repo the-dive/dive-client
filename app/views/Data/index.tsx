@@ -35,7 +35,6 @@ const datasetsQueryDocument = graphql(/* GraphQL */`
             results {
                 createdAt
                 error
-                extraData
                 hasErrored
                 id
                 metadata
