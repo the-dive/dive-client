@@ -1,36 +1,30 @@
 .tab-view {
     display: flex;
     gap: 1rem;
+    overflow: auto;
 
-    .table-view-properties {
-        border-radius: 5px;
-        background-color: var(--mantine-color-gray-2);
-
-        .action-icon-active {
-            color: white;
-            background-color: var(--mantine-color-brand-5);
-        }
+    .tab {
+        overflow: auto;
     }
-
     .table-status-button {
-        font-size: 14px;
         background-color: var(--mantine-color-gray-2);
         color: var(--mantine-color-gray-6);
+        font-size: 14px;
     }
 }
 
 .column-header {
-    font-size: var(--mantine-font-size-sm);
-    color: var(--mantine-color-dark-9);
-    font-weight: 700;
     width: max-content;
+    color: var(--mantine-color-dark-9);
+    font-size: var(--mantine-font-size-sm);
+    font-weight: 700;
 }
 
-.table-container {
+.tab-panel {
     display: flex;
     flex-grow: 1;
-    overflow: auto;
     max-height: 60vh;
+    overflow: auto;
 
     .scroll-area {
         display: flex;

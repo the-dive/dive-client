@@ -1,29 +1,34 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
     ActionIcon,
-    Group,
-    Paper,
-    Divider,
-    Table,
-    ScrollArea,
-    Menu,
+    Card,
     Collapse,
-    SegmentedControl,
+    Divider,
     Flex,
+    Group,
+    Menu,
+    Paper,
+    ScrollArea,
+    SegmentedControl,
+    SimpleGrid,
+    Stack,
+    Table,
+    Tabs,
+    Text,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
-import { isDefined, _cs } from '@togglecorp/fujs';
+import { isDefined } from '@togglecorp/fujs';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import {
-    MdOutlineTableChart,
-    MdList,
-    MdOutlineGridView,
-    MdOutlineTag,
-    MdOutlineLanguage,
-    MdOutlineCalendarToday,
-    MdOutlineLocationOn,
     MdGrid3X3,
     MdHdrAuto,
+    MdList,
+    MdOutlineCalendarToday,
+    MdOutlineGridView,
+    MdOutlineLanguage,
+    MdOutlineLocationOn,
+    MdOutlineTableChart,
+    MdOutlineTag,
 } from 'react-icons/md';
 import { useMutation, useQuery } from 'urql';
 import { graphql } from '#gql';
@@ -35,7 +40,6 @@ interface Props {
 }
 
 type Row = Record<string, string>;
-type TabTypes = 'tableView' | 'listView' | 'gridView';
 type Column = NonNullable<NonNullable<NonNullable<WorkTableQuery['table']>['dataColumnStats']>[0]>;
 
 interface ListColKeyValue {
@@ -148,10 +152,7 @@ const tableActionMutationDocument = graphql(/* graphql */`
 export default function WorkTable(props: Props) {
     const { tableId } = props;
 
-    const [
-        activeTab,
-        setActiveTab,
-    ] = useState<TabTypes>('tableView');
+    const [opened, toggleOpened] = useToggle([true, false]);
 
     const [
         ,
@@ -173,8 +174,6 @@ export default function WorkTable(props: Props) {
     } = useMemo(() => (
         workspaceTableResult
     ), [workspaceTableResult]);
-
-    const [opened, toggleOpened] = useToggle([true, false]);
 
     const colsKeys = useMemo(() => (
         workspaceTable?.table?.dataColumnStats
@@ -286,6 +285,10 @@ export default function WorkTable(props: Props) {
         tableId,
     ]);
 
+    const handleCollapseClick = useCallback(() => {
+        toggleOpened();
+    }, [toggleOpened]);
+
     const listColumn = useMemo(() => (
         listColKeyValue.map((list) => (
             <th key={`${tableId}-list-${list.key}`}>
@@ -296,154 +299,243 @@ export default function WorkTable(props: Props) {
         tableId,
     ]);
 
-    const handleCollapseClick = useCallback(() => {
-        toggleOpened();
-    }, [toggleOpened]);
-
-    const handleTabChange = useCallback((e: React.BaseSyntheticEvent) => {
-        setActiveTab(e.currentTarget.name);
-    }, [setActiveTab]);
-
     return (
-        <>
-            <Paper
-                p="md"
-                className={styles.tabView}
+        <Paper
+            p="md"
+            className={styles.tabView}
+        >
+            <Tabs
+                variant="pills"
+                defaultValue="tableView"
+                className={styles.tab}
             >
-                <Group
-                    spacing={1}
-                    className={styles.tableViewProperties}
-                >
-                    <ActionIcon
-                        color="dark"
-                        size="md"
-                        variant="transparent"
-                        name="tableView"
-                        onClick={handleTabChange}
-                        className={_cs(activeTab === 'tableView'
-                            ? styles.actionIconActive
-                            : styles.action)}
-                    >
-                        <MdOutlineTableChart />
-                    </ActionIcon>
-                    <ActionIcon
-                        color="dark"
-                        size="md"
-                        variant="transparent"
-                        name="listView"
-                        onClick={handleTabChange}
-                        className={_cs(activeTab === 'listView'
-                            ? styles.actionIconActive
-                            : styles.action)}
-                    >
-                        <MdList />
-                    </ActionIcon>
-                    <ActionIcon
-                        color="dark"
-                        size="md"
-                        variant="transparent"
-                        name="gridView"
-                        onClick={handleTabChange}
-                        className={_cs(activeTab === 'gridView'
-                            ? styles.actionIconActive
-                            : styles.action)}
-                    >
-                        <MdOutlineGridView />
-                    </ActionIcon>
-                </Group>
-                <Divider orientation="vertical" />
-                <Group
-                    className={styles.tableStatus}
-                >
-                    <ActionIcon
-                        variant="transparent"
-                        className={styles.tableStatusButton}
-                    >
-                        1
-                        <MdOutlineTag />
-                    </ActionIcon>
-                    <ActionIcon
-                        variant="transparent"
-                        className={styles.tableStatusButton}
-                    >
-                        1
-                        <MdOutlineCalendarToday />
-                    </ActionIcon>
-                    <ActionIcon
-                        variant="transparent"
-                        className={styles.tableStatusButton}
-                    >
-                        1
-                        <MdOutlineLanguage />
-                    </ActionIcon>
-                    <ActionIcon
-                        variant="transparent"
-                        className={styles.tableStatusButton}
-                    >
-                        1
-                        <MdOutlineLocationOn />
-                    </ActionIcon>
-                </Group>
-                <ActionIcon
-                    color="dark"
-                    size="md"
-                    variant="transparent"
-                    onClick={handleCollapseClick}
-                >
-                    {opened ? <IoChevronUp /> : <IoChevronDown />}
-                </ActionIcon>
-            </Paper>
-            <Divider />
-            {activeTab === 'tableView' && (
-                <Collapse in={opened} className={styles.collapse}>
-                    <Paper className={styles.tableContainer} withBorder>
-                        <ScrollArea className={styles.scrollArea}>
-                            <Table striped withColumnBorders>
-                                <thead>
-                                    <tr>
-                                        {columns}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {rows}
-                                </tbody>
-                            </Table>
-                        </ScrollArea>
-                    </Paper>
+                <Tabs.List>
+                    <Tabs.Tab value="tableView" icon={<MdOutlineTableChart size={14} />} />
+                    <Tabs.Tab value="listView" icon={<MdList size={14} />} />
+                    <Tabs.Tab value="gridView" icon={<MdOutlineGridView size={14} />} />
+                    <Group>
+                        <ActionIcon
+                            variant="transparent"
+                            className={styles.tableStatusButton}
+                        >
+                            1
+                            <MdOutlineTag />
+                        </ActionIcon>
+                        <ActionIcon
+                            variant="transparent"
+                            className={styles.tableStatusButton}
+                        >
+                            1
+                            <MdOutlineCalendarToday />
+                        </ActionIcon>
+                        <ActionIcon
+                            variant="transparent"
+                            className={styles.tableStatusButton}
+                        >
+                            1
+                            <MdOutlineLanguage />
+                        </ActionIcon>
+                        <ActionIcon
+                            variant="transparent"
+                            className={styles.tableStatusButton}
+                        >
+                            1
+                            <MdOutlineLocationOn />
+                        </ActionIcon>
+                        <ActionIcon
+                            color="dark"
+                            size="md"
+                            variant="transparent"
+                            onClick={handleCollapseClick}
+                        >
+                            {opened ? <IoChevronUp /> : <IoChevronDown />}
+                        </ActionIcon>
+                    </Group>
+                </Tabs.List>
+                <Collapse in={opened}>
+                    <Tabs.Panel value="tableView" pt="xs">
+                        <Paper className={styles.tabPanel}>
+                            <ScrollArea className={styles.scrollArea}>
+                                <Table striped withColumnBorders>
+                                    <thead>
+                                        <tr>
+                                            {columns}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {rows}
+                                    </tbody>
+                                </Table>
+                            </ScrollArea>
+                        </Paper>
+                    </Tabs.Panel>
+                    <Tabs.Panel value="listView" pt="xs">
+                        <Paper className={styles.tabPanel}>
+                            <ScrollArea className={styles.scrollArea}>
+                                <Flex
+                                    justify="center"
+                                    p="sm"
+                                >
+                                    <SegmentedControl
+                                        radius="lg"
+                                        color="brand"
+                                        data={[
+                                            { value: 'summary_stats', label: 'Summary stats' },
+                                            { value: 'framework_setup', label: 'Framework setup', disabled: true },
+                                        ]}
+                                    />
+                                </Flex>
+                                <Table striped withColumnBorders>
+                                    <thead>
+                                        <tr>
+                                            {listColumn}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {listRows}
+                                    </tbody>
+                                </Table>
+                            </ScrollArea>
+                        </Paper>
+                    </Tabs.Panel>
+                    <Tabs.Panel value="gridView" pt="xs">
+                        <Paper className={styles.tabPanel}>
+                            <ScrollArea className={styles.scrollArea}>
+                                <SimpleGrid
+                                    breakpoints={[
+                                        { minWidth: 'sm', cols: 2 },
+                                        { minWidth: 'md', cols: 3 },
+                                        { minWidth: 'lg', cols: 4 },
+                                    ]}
+                                    p="md"
+                                    spacing="md"
+                                >
+                                    {workspaceTable?.table?.dataColumnStats?.map((stats) => (
+                                        <Card shadow="sm" p="sm" radius="sm" withBorder key={stats?.key}>
+                                            <Stack>
+                                                <Text size="lg" weight={600}>{stats?.label}</Text>
+                                                {isDefined(stats?.min) && (
+                                                    <Paper>
+                                                        <Group position="apart">
+                                                            <Text>Min</Text>
+                                                            <Text>{stats?.min}</Text>
+                                                        </Group>
+                                                        <Divider />
+                                                    </Paper>
+                                                )}
+                                                {isDefined(stats?.max) && (
+                                                    <Paper>
+                                                        <Group position="apart">
+                                                            <Text weight={500}>
+                                                                Max
+                                                            </Text>
+                                                            <Text weight={500}>
+                                                                {stats?.max}
+                                                            </Text>
+                                                        </Group>
+                                                        <Divider />
+                                                    </Paper>
+                                                )}
+                                                {isDefined(stats?.minLength) && (
+                                                    <Paper>
+                                                        <Group position="apart">
+                                                            <Text weight={500}>
+                                                                Min Length
+                                                            </Text>
+                                                            <Text weight={500}>
+                                                                {stats?.minLength}
+                                                            </Text>
+                                                        </Group>
+                                                        <Divider />
+                                                    </Paper>
+                                                )}
+                                                {isDefined(stats?.maxLength) && (
+                                                    <Paper>
+                                                        <Group position="apart">
+                                                            <Text weight={500}>
+                                                                Max Length
+                                                            </Text>
+                                                            <Text weight={500}>
+                                                                {stats?.maxLength}
+                                                            </Text>
+                                                        </Group>
+                                                        <Divider />
+                                                    </Paper>
+                                                )}
+                                                {isDefined(stats?.mean) && (
+                                                    <Paper>
+                                                        <Group position="apart">
+                                                            <Text weight={500}>
+                                                                Mean
+                                                            </Text>
+                                                            <Text weight={500}>
+                                                                {stats?.mean}
+                                                            </Text>
+                                                        </Group>
+                                                        <Divider />
+                                                    </Paper>
+                                                )}
+                                                {isDefined(stats?.median) && (
+                                                    <Paper>
+                                                        <Group position="apart">
+                                                            <Text weight={500}>
+                                                                Median
+                                                            </Text>
+                                                            <Text weight={500}>
+                                                                {stats?.median}
+                                                            </Text>
+                                                        </Group>
+                                                        <Divider />
+                                                    </Paper>
+                                                )}
+                                                {isDefined(stats?.stdDeviation) && (
+                                                    <Paper>
+                                                        <Group position="apart">
+                                                            <Text weight={500}>
+                                                                Standard Deviation
+                                                            </Text>
+                                                            <Text weight={500}>
+                                                                {stats?.stdDeviation}
+                                                            </Text>
+                                                        </Group>
+                                                        <Divider />
+                                                    </Paper>
+                                                )}
+                                                {isDefined(stats?.totalCount) && (
+                                                    <Paper>
+                                                        <Group position="apart">
+                                                            <Text weight={500}>
+                                                                Total Count
+                                                            </Text>
+                                                            <Text weight={500}>
+                                                                {stats?.totalCount}
+                                                            </Text>
+                                                        </Group>
+                                                        <Divider />
+                                                    </Paper>
+                                                )}
+                                                {isDefined(stats?.uniqueCount) && (
+                                                    <Paper>
+                                                        <Group position="apart">
+                                                            <Text weight={500}>
+                                                                Unique Count
+                                                            </Text>
+                                                            <Text weight={500}>
+                                                                {stats?.uniqueCount}
+                                                            </Text>
+                                                        </Group>
+                                                        <Divider />
+                                                    </Paper>
+                                                )}
+                                            </Stack>
+                                        </Card>
+                                    ))}
+                                </SimpleGrid>
+                            </ScrollArea>
+                        </Paper>
+                    </Tabs.Panel>
                 </Collapse>
-            )}
-            {activeTab === 'listView' && (
-                <Collapse in={opened} className={styles.collapse}>
-                    <Flex
-                        justify="center"
-                        className={styles.segmentedFlex}
-                        p="sm"
-                    >
-                        <SegmentedControl
-                            radius="lg"
-                            color="brand"
-                            data={[
-                                { value: 'summary_stats', label: 'Summary stats' },
-                                { value: 'framework_setup', label: 'Framework setup', disabled: true },
-                            ]}
-                        />
-                    </Flex>
-                    <Paper className={styles.tableContainer} withBorder>
-                        <ScrollArea className={styles.scrollArea}>
-                            <Table striped withColumnBorders>
-                                <thead>
-                                    <tr>
-                                        {listColumn}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {listRows}
-                                </tbody>
-                            </Table>
-                        </ScrollArea>
-                    </Paper>
-                </Collapse>
-            )}
-        </>
+            </Tabs>
+        </Paper>
     );
 }
