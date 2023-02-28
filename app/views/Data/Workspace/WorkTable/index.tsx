@@ -353,7 +353,7 @@ export default function WorkTable(props: Props) {
                     </Group>
                 </Tabs.List>
                 <Collapse in={opened}>
-                    <Tabs.Panel value="tableView" pt="xs">
+                    <Tabs.Panel className={styles.tabPanelWrapper} value="tableView" pt="xs">
                         <Paper className={styles.tabPanel}>
                             <ScrollArea className={styles.scrollArea}>
                                 <Table striped withColumnBorders>
@@ -369,7 +369,7 @@ export default function WorkTable(props: Props) {
                             </ScrollArea>
                         </Paper>
                     </Tabs.Panel>
-                    <Tabs.Panel value="listView" pt="xs">
+                    <Tabs.Panel className={styles.tabPanelWrapper} value="listView" pt="xs">
                         <Paper className={styles.tabPanel}>
                             <ScrollArea className={styles.scrollArea}>
                                 <Flex
@@ -398,7 +398,7 @@ export default function WorkTable(props: Props) {
                             </ScrollArea>
                         </Paper>
                     </Tabs.Panel>
-                    <Tabs.Panel value="gridView" pt="xs">
+                    <Tabs.Panel className={styles.tabPanelWrapper} value="gridView" pt="xs">
                         <Paper className={styles.tabPanel}>
                             <ScrollArea className={styles.scrollArea}>
                                 <SimpleGrid
