@@ -1,38 +1,6 @@
-.tab-view {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    overflow: auto;
-
-    .tab {
-        overflow: auto;
-    }
-
-    .table-status-button {
-        background-color: var(--mantine-color-gray-2);
-        color: var(--mantine-color-gray-6);
-        font-size: 14px;
-    }
-}
-
 .column-header {
     width: max-content;
     color: var(--mantine-color-dark-9);
     font-size: var(--mantine-font-size-sm);
     font-weight: 700;
-}
-
-.tab-panel-wrapper {
-    width: 100%;
-
-    .tab-panel {
-        display: flex;
-        max-height: 60vh;
-        overflow: auto;
-
-        .scroll-area {
-            display: flex;
-            flex-grow: 1;
-        }
-    }
 }

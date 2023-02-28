@@ -24,6 +24,7 @@ interface Props {
     selectedTableId: string;
     tables: TableType[] | null | undefined;
     onClose: () => void;
+    onOpenJoinModal: () => void;
 }
 
 const relationTypes: SelectItem[] = [
@@ -36,6 +37,7 @@ export default function SetRelationshipModal(props: Props) {
         selectedTableId,
         tables,
         onClose,
+        onOpenJoinModal,
     } = props;
 
     const tableRelationshipForm = useForm<TableRelationshipFormType>({
@@ -133,6 +135,7 @@ export default function SetRelationshipModal(props: Props) {
                         radius="xl"
                         variant="light"
                         uppercase
+                        onClick={onOpenJoinModal}
                     >
                         Apply
                     </Button>

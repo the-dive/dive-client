@@ -20,6 +20,7 @@ import { TableType } from '#gql/graphql';
 import { graphql } from '#gql';
 
 import SetRelationshipModal from './SetRelationshipModal';
+import JoinModal from './JoinModal';
 import ImportTable from './ImportTable';
 import styles from './styles.module.css';
 import WorkTable from './WorkTable';
@@ -274,6 +275,7 @@ export default function Workspace(props: Props) {
     const context = useMemo(() => ({ additionalTypenames: ['TableType'] }), []);
     const [relationTableId, setRelationTableId] = useState<string>();
     const [activeTableId, setActiveTableId] = useState<string>();
+    const [joinOpen, setJoinOpen] = useState<boolean>(false);
     const [
         tablesAddedToWorkspaceResult,
     ] = useQuery({
@@ -296,6 +298,14 @@ export default function Workspace(props: Props) {
 
     const handleModalClose = useCallback(() => {
         setRelationTableId(undefined);
+    }, []);
+    const handleJoinModalOpen = useCallback(() => {
+        setRelationTableId(undefined);
+        setJoinOpen(true);
+    }, []);
+
+    const handleJoinModalClose = useCallback(() => {
+        setJoinOpen(false);
     }, []);
 
     const handleTableRemoveSuccess = useCallback((id: string) => {
@@ -323,6 +333,14 @@ export default function Workspace(props: Props) {
                         selectedTableId={relationTableId}
                         onClose={handleModalClose}
                         tables={workspaceData?.tables?.results}
+                        onOpenJoinModal={handleJoinModalOpen}
+                    />
+                )}
+                {joinOpen && (
+                    <JoinModal
+                        joinOpen={joinOpen}
+                        onClose={handleJoinModalClose}
+                        tableId={activeTableId ?? ''}
                     />
                 )}
             </Paper>

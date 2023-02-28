@@ -1,0 +1,14 @@
+.join-modal-flex {
+    flex-grow: 1;
+    overflow: auto;
+
+    .join-modal-form {
+        flex-basis: 30%;
+        flex-shrink: 0;
+    }
+
+    .join-modal-table {
+        flex-grow: 1;
+        overflow: auto;
+    }
+}
