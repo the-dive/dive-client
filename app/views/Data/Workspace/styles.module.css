@@ -12,6 +12,16 @@
         gap: var(--mantine-spacing-xl);
         align-content: flex-start;
         padding: var(--mantine-spacing-xl);
+
+
+        .workspace-item {
+            display: flex;
+            border-left: 2px solid transparent;
+        }
+
+        .active {
+            border-left: 2px solid var(--mantine-color-brand-5);
+        }
     }
 }
 
