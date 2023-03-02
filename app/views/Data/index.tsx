@@ -136,12 +136,14 @@ export default function Data() {
                         >
                             {item.tables?.map((table) => (
                                 <NavLink
+                                    active={tableToImportId === table.id}
                                     className={styles.navLink}
                                     key={table.id}
                                     icon={<MdOutlineTableChart />}
                                     label={table.name}
                                     disabled={table.isAddedToWorkspace}
                                     onClick={() => handleTableClick(table.id)}
+                                    variant="subtle"
                                 />
                             ))}
                         </NavLink>
