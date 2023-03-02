@@ -1,8 +1,10 @@
+import { NavLink, Outlet } from 'react-router-dom';
+import { _cs } from '@togglecorp/fujs';
 import {
-    ActionIcon,
+    Text,
+    Center,
+    Container,
     AppShell,
-    Divider,
-    Flex,
     Header,
     Image,
 } from '@mantine/core';
@@ -10,44 +12,52 @@ import {
     MdOutlineDns,
     MdOutlineHome,
 } from 'react-icons/md';
-import { Outlet } from 'react-router-dom';
-import ActionNavLink from '#base/components/ActionNavLink';
 import styles from './styles.module.css';
 
 function ProtectedLayout() {
+    const getNavLinkClassName = ({ isActive }: { isActive: boolean }) => {
+        if (isActive) {
+            return _cs(styles.navLink, styles.active);
+        }
+        return styles.navLink;
+    };
+
     return (
         <AppShell
             padding="xs"
             header={(
-                <Header height={60} p="xs">
-                    <Flex
-                        gap="lg"
-                    >
-                        <Image height={30} width={100} src="/assets/DiveRegular.svg" alt="Dive" />
-                        <Flex justify="center" align="center" gap="xl" className={styles.navButton}>
-                            <ActionNavLink
-                                route="/"
+                <Header height={60} className={styles.header}>
+                    <Container fluid className={styles.container} px="0">
+                        <div
+                            className={styles.logoContainer}
+                        >
+                            <Image height={30} width={100} src="/assets/DiveRegular.svg" alt="Dive" fit="contain" />
+                        </div>
+                        <div className={styles.links}>
+                            <NavLink
+                                to="/"
+                                className={getNavLinkClassName}
                             >
-                                <ActionIcon className={styles.actionIcon}>
-                                    <Flex align="center" gap="xs">
-                                        <MdOutlineHome size={20} />
-                                        HOME
-                                    </Flex>
-                                </ActionIcon>
-                            </ActionNavLink>
-                            <Divider orientation="vertical" />
-                            <ActionNavLink
-                                route="/data"
+                                <Center inline>
+                                    <MdOutlineHome size="1.2rem" />
+                                    <Text fz="md" transform="uppercase" weight={600}>
+                                        Home
+                                    </Text>
+                                </Center>
+                            </NavLink>
+                            <NavLink
+                                to="/data"
+                                className={getNavLinkClassName}
                             >
-                                <ActionIcon className={styles.actionIcon}>
-                                    <Flex align="center" gap="xs">
-                                        <MdOutlineDns size={20} />
-                                        DATA
-                                    </Flex>
-                                </ActionIcon>
-                            </ActionNavLink>
-                        </Flex>
-                    </Flex>
+                                <Center inline>
+                                    <MdOutlineDns size="1.2rem" />
+                                    <Text fz="md" transform="uppercase" weight={600}>
+                                        Data
+                                    </Text>
+                                </Center>
+                            </NavLink>
+                        </div>
+                    </Container>
                 </Header>
             )}
             styles={(theme) => ({
