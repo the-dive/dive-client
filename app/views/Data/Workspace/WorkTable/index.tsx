@@ -129,7 +129,11 @@ const tableActionMutationDocument = graphql(/* graphql */`
                 params: [$key, $type]
             }
         ) {
-            result
+            result{
+                id
+                isAddedToWorkspace
+                name
+            }
             ok
             errors
         }
@@ -149,7 +153,6 @@ export default function WorkTable(props: Props) {
 
     const [
         workspaceTableResult,
-        reexecuteQuery,
     ] = useQuery({
         query: workspaceTableQueryDocument,
         variables: {
@@ -201,13 +204,12 @@ export default function WorkTable(props: Props) {
             type: e.currentTarget.name,
         }).then((result) => {
             if (result.data?.tableAction?.ok) {
-                reexecuteQuery({ requestPolicy: 'network-only' });
+                console.log('done');
             }
         })
     ), [
         tableAction,
         tableId,
-        reexecuteQuery,
     ]);
 
     const columns = useMemo(() => (
