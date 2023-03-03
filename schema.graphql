@@ -266,7 +266,7 @@ type Mutation {
 type PerformTableAction {
   errors: [GenericScalar!]
   ok: Boolean
-  result: Int
+  result: TableType
 }
 
 type PropertiesOptionsType {
