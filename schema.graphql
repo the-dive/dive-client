@@ -230,6 +230,12 @@ enum JoinJoinType {
   RIGHT_JOIN
 }
 
+type JoinPreviewMutation {
+  errors: [GenericScalar!]
+  ok: Boolean
+  result: RowsColumnsType
+}
+
 type JoinType {
   """"""
   clauses: JSONString!
@@ -257,6 +263,7 @@ type Mutation {
   cloneTable(id: ID!): CloneTable
   createDataset(data: CreateDatasetInputType!): CreateDataset
   deleteTableFromWorkspace(id: ID!): DeleteTableFromWorkspace
+  joinPreview(data: TableJoinInputType!, id: ID!): JoinPreviewMutation
   renameTable(id: ID!, name: String!): RenameTable
   tableAction(action: ActionInputType!, id: ID!): PerformTableAction
   tableJoin(data: TableJoinInputType!, id: ID!): TableJoinMutation
@@ -342,6 +349,11 @@ type RenameTable {
   errors: [GenericScalar!]
   ok: Boolean
   result: TableType
+}
+
+type RowsColumnsType {
+  columns: [KeyLabelType]
+  rows: [GenericScalar]
 }
 
 type TableColumnStatsType {
