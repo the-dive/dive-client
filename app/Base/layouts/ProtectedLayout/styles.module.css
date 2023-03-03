@@ -1,8 +1,34 @@
-.navButton {
-    width: 50%;
+.header {
+    display: flex;
+    flex-grow: 1;
 
-    .action-icon {
-        width: unset;
-        font-weight: 700;
+    .container {
+        display: flex;
+        flex-grow: 1;
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 300px;
+        }
+
+        .links {
+            display: flex;
+            align-items: stretch;
+
+            .nav-link {
+                display: flex;
+                border-bottom: 2px solid transparent;
+                padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+                text-decoration: none;
+                color: var(--mantine-color-dark-5);
+            }
+
+            .active {
+                border-bottom: 2px solid var(--mantine-color-brand-5);
+                color: var(--mantine-color-brand-5);
+            }
+        }
     }
 }
