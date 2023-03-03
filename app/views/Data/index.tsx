@@ -55,7 +55,7 @@ const datasetsQueryDocument = graphql(/* GraphQL */`
 
 export default function Data() {
     const [isModalVisible, setModalVisible] = useState(false);
-    const [selectedTable, setSelectedTable] = useState<string | undefined>();
+    const [tableToImportId, setTableToImportId] = useState<string | undefined>();
     /*
      *  URQL's Document Caching Gotcha
      *  If we request a list of data, and the API returns an empty list, then the
@@ -84,15 +84,15 @@ export default function Data() {
     }, []);
 
     const handleTableClick = useCallback((tableId: string) => {
-        setSelectedTable(tableId);
+        setTableToImportId(tableId);
     }, []);
 
     const handleTableImportCancel = useCallback(() => {
-        setSelectedTable(undefined);
+        setTableToImportId(undefined);
     }, []);
 
     const handleTableImportSuccess = useCallback(() => {
-        setSelectedTable(undefined);
+        setTableToImportId(undefined);
     }, []);
 
     const hasData = (data?.datasets?.totalCount ?? 0) > 0;
@@ -153,7 +153,7 @@ export default function Data() {
             )}
             {!fetching && hasData && (
                 <Workspace
-                    selectedTable={selectedTable}
+                    tableToImportId={tableToImportId}
                     onImportCancel={handleTableImportCancel}
                     onImportSuccess={handleTableImportSuccess}
                 />

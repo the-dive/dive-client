@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
+import { _cs } from '@togglecorp/fujs';
 import {
     Button,
     Divider,
@@ -24,7 +25,7 @@ import styles from './styles.module.css';
 import WorkTable from './WorkTable';
 
 interface Props {
-    selectedTable?: string;
+    tableToImportId?: string;
     onImportCancel: () => void;
     onImportSuccess: () => void;
 }
@@ -92,6 +93,8 @@ interface WorkspaceItemProps {
     table: TableType;
     onSetRelation: (id: string) => void;
     onTableClick: (id: string) => void;
+    onTableRemoveSuccess: (id: string) => void;
+    activeTableId?: string;
 }
 
 function WorkspaceItem(props: WorkspaceItemProps) {
@@ -99,6 +102,8 @@ function WorkspaceItem(props: WorkspaceItemProps) {
         table,
         onSetRelation,
         onTableClick,
+        onTableRemoveSuccess,
+        activeTableId,
     } = props;
 
     const [isRenameClicked, setIsRenameClicked] = useState(false);
@@ -120,8 +125,12 @@ function WorkspaceItem(props: WorkspaceItemProps) {
     ] = useMutation(renameTableFromWorkspaceMutationDocument);
 
     const handleRemoveButtonClick = useCallback(() => {
-        removeTableFromWorkspace({ id: table.id });
-    }, [removeTableFromWorkspace, table.id]);
+        removeTableFromWorkspace({ id: table.id }).then((response) => {
+            if (response.data?.deleteTableFromWorkspace?.ok) {
+                onTableRemoveSuccess(table.id);
+            }
+        });
+    }, [removeTableFromWorkspace, table.id, onTableRemoveSuccess]);
 
     const handleDuplicateButtonClick = useCallback(() => {
         duplicateTableFromWorkspace({ id: table.id });
@@ -159,8 +168,12 @@ function WorkspaceItem(props: WorkspaceItemProps) {
         onTableClick(table.id);
     }, [table.id, onTableClick]);
 
+    const isActive = activeTableId === table.id;
+
     return (
-        <Button.Group key={table.id}>
+        <Button.Group
+            className={_cs(styles.workspaceItem, isActive && styles.active)}
+        >
             <Button
                 variant="light"
                 color="gray"
@@ -247,7 +260,7 @@ function WorkspaceItem(props: WorkspaceItemProps) {
 
 export default function Workspace(props: Props) {
     const {
-        selectedTable,
+        tableToImportId,
         onImportCancel,
         onImportSuccess,
     } = props;
@@ -260,7 +273,7 @@ export default function Workspace(props: Props) {
     */
     const context = useMemo(() => ({ additionalTypenames: ['TableType'] }), []);
     const [relationTableId, setRelationTableId] = useState<string>();
-    const [tableId, setTableId] = useState<string>();
+    const [activeTableId, setActiveTableId] = useState<string>();
     const [
         tablesAddedToWorkspaceResult,
     ] = useQuery({
@@ -277,13 +290,19 @@ export default function Workspace(props: Props) {
         setRelationTableId(id);
     }, []);
 
-    const handleTableClick = useCallback((id: string) => {
-        setTableId(id);
+    const handleTableClick = useCallback((id: string | undefined) => {
+        setActiveTableId(id);
     }, []);
 
     const handleModalClose = useCallback(() => {
         setRelationTableId(undefined);
     }, []);
+
+    const handleTableRemoveSuccess = useCallback((id: string) => {
+        if (id === activeTableId) {
+            setActiveTableId(undefined);
+        }
+    }, [activeTableId]);
 
     return (
         <Paper className={styles.workspaceContainer}>
@@ -293,8 +312,10 @@ export default function Workspace(props: Props) {
                     <WorkspaceItem
                         key={table.id}
                         table={table}
+                        activeTableId={activeTableId}
                         onSetRelation={handleSetRelation}
                         onTableClick={handleTableClick}
+                        onTableRemoveSuccess={handleTableRemoveSuccess}
                     />
                 ))}
                 {relationTableId && (
@@ -305,22 +326,21 @@ export default function Workspace(props: Props) {
                     />
                 )}
             </Paper>
-            {selectedTable && (
+            {tableToImportId && (
                 <>
                     <Divider />
                     <ImportTable
-                        key={selectedTable}
-                        tableId={selectedTable}
+                        tableId={tableToImportId}
                         onCancel={onImportCancel}
                         onSuccess={onImportSuccess}
                     />
                 </>
             )}
-            {(!selectedTable && tableId) && (
+            {(!tableToImportId && activeTableId) && (
                 <>
                     <Divider />
                     <WorkTable
-                        tableId={tableId}
+                        tableId={activeTableId}
                     />
                 </>
             )}
