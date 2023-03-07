@@ -8,15 +8,15 @@ import {
     Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { isDefined } from '@togglecorp/fujs';
+import { isDefined, isNotDefined } from '@togglecorp/fujs';
 import { IoChevronDown } from 'react-icons/io5';
 import { TableType } from '#gql/graphql';
 
 import styles from './styles.module.css';
 
-interface TableRelationshipFormType {
+export interface TableRelationshipFormType {
     fromTable: string;
-    toTable: string | null;
+    toTable: string;
     joinType: 'innerJoin' | 'union';
 }
 
@@ -24,12 +24,11 @@ interface Props {
     selectedTableId: string;
     tables: TableType[] | null | undefined;
     onClose: () => void;
-    onOpenJoinModal: () => void;
+    onOpenJoinModal: (values: TableRelationshipFormType) => void;
 }
 
 const relationTypes: SelectItem[] = [
     { value: 'innerJoin', label: 'Inner Join' },
-    { value: 'union', label: 'Union' },
 ];
 
 export default function SetRelationshipModal(props: Props) {
@@ -40,11 +39,16 @@ export default function SetRelationshipModal(props: Props) {
         onOpenJoinModal,
     } = props;
 
-    const tableRelationshipForm = useForm<TableRelationshipFormType>({
+    const tableRelationshipForm = useForm({
         initialValues: {
             fromTable: selectedTableId,
             toTable: null,
             joinType: 'innerJoin',
+        },
+        validate: {
+            fromTable: (value) => (isNotDefined(value) ? 'From table is required' : null),
+            toTable: (value) => (isNotDefined(value) ? 'To table is required' : null),
+            joinType: (value) => (isNotDefined(value) ? 'Join type is required' : null),
         },
     });
 
@@ -58,10 +62,9 @@ export default function SetRelationshipModal(props: Props) {
             ?.map((table) => ({ value: table.id, label: table.name })) ?? []
     ), [tables, selectedTableId]);
 
-    const handleFormSubmit = useCallback((values: any) => { // TODO use proper types
-        // eslint-disable-next-line no-console
-        console.warn('values', values);
-    }, []);
+    const handleFormSubmit = useCallback((values: TableRelationshipFormType) => {
+        onOpenJoinModal(values);
+    }, [onOpenJoinModal]);
 
     return (
         <Modal
@@ -96,12 +99,14 @@ export default function SetRelationshipModal(props: Props) {
                             label="Relation from"
                             readOnly
                             disabled
+                            required
                             data={selectedTable}
                             {...tableRelationshipForm.getInputProps('fromTable')}
                         />
                         <Select
                             label="Relation to"
                             placeholder="Select Table"
+                            required
                             data={otherTables}
                             rightSection={<IoChevronDown className={styles.icon} />}
                             rightSectionWidth={30}
@@ -111,6 +116,7 @@ export default function SetRelationshipModal(props: Props) {
                     <Select
                         label="Relation"
                         data={relationTypes}
+                        required
                         rightSection={<IoChevronDown className={styles.icon} />}
                         rightSectionWidth={30}
                         {...tableRelationshipForm.getInputProps('joinType')}
@@ -135,7 +141,6 @@ export default function SetRelationshipModal(props: Props) {
                         radius="xl"
                         variant="light"
                         uppercase
-                        onClick={onOpenJoinModal}
                     >
                         Apply
                     </Button>

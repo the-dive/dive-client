@@ -19,7 +19,7 @@ import { useQuery, useMutation } from 'urql';
 import { TableType } from '#gql/graphql';
 import { graphql } from '#gql';
 
-import SetRelationshipModal from './SetRelationshipModal';
+import SetRelationshipModal, { TableRelationshipFormType } from './SetRelationshipModal';
 import JoinModal from './JoinModal';
 import ImportTable from './ImportTable';
 import styles from './styles.module.css';
@@ -275,7 +275,10 @@ export default function Workspace(props: Props) {
     const context = useMemo(() => ({ additionalTypenames: ['TableType'] }), []);
     const [relationTableId, setRelationTableId] = useState<string>();
     const [activeTableId, setActiveTableId] = useState<string>();
-    const [joinOpen, setJoinOpen] = useState<boolean>(false);
+    const [
+        relationFormValues,
+        setRelationFormValues,
+    ] = useState<TableRelationshipFormType | undefined>();
     const [
         tablesAddedToWorkspaceResult,
     ] = useQuery({
@@ -299,13 +302,13 @@ export default function Workspace(props: Props) {
     const handleModalClose = useCallback(() => {
         setRelationTableId(undefined);
     }, []);
-    const handleJoinModalOpen = useCallback(() => {
+    const handleJoinModalOpen = useCallback((values: TableRelationshipFormType) => {
+        setRelationFormValues(values);
         setRelationTableId(undefined);
-        setJoinOpen(true);
     }, []);
 
     const handleJoinModalClose = useCallback(() => {
-        setJoinOpen(false);
+        setRelationFormValues(undefined);
     }, []);
 
     const handleTableRemoveSuccess = useCallback((id: string) => {
@@ -336,11 +339,10 @@ export default function Workspace(props: Props) {
                         onOpenJoinModal={handleJoinModalOpen}
                     />
                 )}
-                {joinOpen && (
+                {relationFormValues && (
                     <JoinModal
-                        joinOpen={joinOpen}
+                        formValues={relationFormValues}
                         onClose={handleJoinModalClose}
-                        tableId={activeTableId ?? ''}
                     />
                 )}
             </Paper>

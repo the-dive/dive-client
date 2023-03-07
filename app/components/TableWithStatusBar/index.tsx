@@ -102,7 +102,7 @@ export default function TableWithStatusBar(props: Props) {
                                 variant="transparent"
                                 onClick={handleCollapseClick}
                             >
-                                {opened ? <IoChevronUp /> : <IoChevronDown />}
+                                {opened ? <IoChevronDown /> : <IoChevronUp />}
                             </ActionIcon>
                         </Group>
                     </Tabs.List>

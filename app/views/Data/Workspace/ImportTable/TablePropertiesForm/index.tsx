@@ -18,12 +18,12 @@ import { FormErrors, useForm } from '@mantine/form';
 import { isNotDefined, isDefined } from '@togglecorp/fujs';
 
 import { transformToFormError, ObjectError } from '#base/utils/errorTransform';
+import { mapKeyToValue } from '#base/utils/transform';
 import { graphql } from '#gql';
 import {
     TablePropertiesInputType,
     TablePropertiesOptionsType,
     TablePropertiesType,
-    KeyLabelType,
 } from '#gql/graphql';
 
 import styles from './styles.module.css';
@@ -51,13 +51,6 @@ const updateTablePropertiesMutationDocument = graphql(/* GraphQL */`
       }
     }
 `);
-
-function mapKeyToValue(option?: KeyLabelType | null) {
-    return {
-        value: option?.key,
-        label: option?.label,
-    };
-}
 
 interface Props {
     tablePropertyOptions: TablePropertiesOptionsType | null | undefined;
