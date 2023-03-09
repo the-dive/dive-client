@@ -16,9 +16,11 @@ import {
     MdOutlineCalendarToday,
 } from 'react-icons/md';
 import { useMutation, useQuery } from 'urql';
+
 import { graphql } from '#gql';
 import { WorkTableQuery } from '#gql/graphql';
 import TableWithStatusBar from '#components/TableWithStatusBar';
+
 import styles from './styles.module.css';
 
 interface Props {
