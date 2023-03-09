@@ -16,12 +16,13 @@ import {
 import { isNotDefined, isDefined } from '@togglecorp/fujs';
 import { useForm } from '@mantine/form';
 import { useMutation, useQuery } from 'urql';
+import { IoChevronDown } from 'react-icons/io5';
+
 import { mapKeyToValue } from '#base/utils/transform';
 import { graphql } from '#gql';
-import { IoChevronDown } from 'react-icons/io5';
 import { TableJoinInputType } from '#gql/graphql';
-
 import PreviewTable from '#views/Data/Workspace/ImportTable/PreviewTable';
+
 import { TableRelationshipFormType } from '../SetRelationshipModal';
 import styles from './styles.module.css';
 

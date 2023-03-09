@@ -16,14 +16,15 @@ import {
 } from 'react-icons/md';
 import { IoChevronDown } from 'react-icons/io5';
 import { useQuery, useMutation } from 'urql';
+
 import { TableType } from '#gql/graphql';
 import { graphql } from '#gql';
 
 import SetRelationshipModal, { TableRelationshipFormType } from './SetRelationshipModal';
 import JoinModal from './JoinModal';
 import ImportTable from './ImportTable';
-import styles from './styles.module.css';
 import WorkTable from './WorkTable';
+import styles from './styles.module.css';
 
 interface Props {
     tableToImportId?: string;

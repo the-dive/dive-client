@@ -10,6 +10,7 @@ import {
 import { useForm } from '@mantine/form';
 import { isDefined, isNotDefined } from '@togglecorp/fujs';
 import { IoChevronDown } from 'react-icons/io5';
+
 import { TableType } from '#gql/graphql';
 
 import styles from './styles.module.css';
