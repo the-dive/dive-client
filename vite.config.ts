@@ -5,6 +5,7 @@ import eslint from 'vite-plugin-eslint';
 import svgr from 'vite-plugin-svgr';
 import viteImagemin from 'vite-plugin-imagemin';
 import { VitePWA } from 'vite-plugin-pwa';
+import checker from 'vite-plugin-checker';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -13,6 +14,12 @@ export default defineConfig(({ mode }) => ({
         tsconfigPaths(),
         // https://github.com/gxmari007/vite-plugin-eslint
         eslint({ cache: true }),
+        // https://github.com/fi3ework/vite-plugin-checker
+        checker({
+            stylelint: {
+                lintCommand: 'stylelint --cache --ignore-path .gitignore **/*.css',
+            },
+        }),
         // https://github.com/pd4d10/vite-plugin-svgr
         svgr(),
         // https://github.com/vbenjs/vite-plugin-imagemin
