@@ -11,7 +11,8 @@
     "lint": "pnpm codegen && eslint app --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint app --ext .js,.jsx,.ts,.tsx --fix",
     "typecheck": "pnpm codegen && tsc",
-    "stylelint": "stylelint --cache --fix --ignore-path .gitignore **/*.css",
+    "stylelint": "stylelint --cache --ignore-path .gitignore **/*.css",
+    "stylelint:fix": "stylelint --cache --fix --ignore-path .gitignore **/*.css",
     "test": "vitest",
     "codegen": "graphql-codegen --require dotenv/config --config codegen.yml dotenv_config_path=./.env.local",
     "prepare": "husky install"
@@ -74,6 +75,7 @@
     "typescript": "^4.9.4",
     "typescript-plugin-css-modules": "^4.1.1",
     "vite": "^4.0.1",
+    "vite-plugin-checker": "^0.5.6",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-pwa": "^0.14.0",
     "vite-tsconfig-paths": "^4.0.2",

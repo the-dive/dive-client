@@ -44,6 +44,22 @@ jobs:
           VITE_GRAPHQL_CODEGEN_ENDPOINT: "schema.graphql"
         run: pnpm run typecheck
 
+  stylelint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install
+
+      - name: Stylelint
+        run: pnpm run stylelint
+
   build:
     runs-on: ubuntu-latest
     steps:
