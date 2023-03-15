@@ -1,26 +1,33 @@
 .join-modal {
-    flex-grow: 1;
+    display: flex;
     overflow: auto;
 
-    .join-modal-form {
-        flex-basis: 35%;
-        flex-shrink: 0;
-        background-color: var(--mantine-color-gray-1);
-        padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
-
-        .icon {
-            color: var(--mantine-color-gray-5);
-        }
-    }
-
-    .join-modal-table {
-        flex-basis: 65%;
+    .form-container {
+        display: flex;
         flex-grow: 1;
         overflow: auto;
 
-        .text {
+        .join-modal-form {
+            display: flex;
+            flex-basis: 30%;
+            background-color: var(--mantine-color-gray-1);
+            padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
+
+            .icon {
+                color: var(--mantine-color-gray-5);
+            }
+        }
+
+        .join-modal-table {
             display: flex;
             flex-grow: 1;
+            overflow: auto;
+
+            .text {
+                display: flex;
+                flex-grow: 1;
+            }
         }
     }
+
 }

@@ -51,7 +51,7 @@ export default function ImportTable(props: Props) {
     return (
         <Paper className={styles.tableContainer} radius="md" withBorder>
             <ScrollArea className={styles.scrollArea}>
-                <Table striped withColumnBorders>
+                <Table striped withColumnBorders miw={500}>
                     <thead>
                         <tr>
                             {columns}
