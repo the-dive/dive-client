@@ -4,3 +4,11 @@
     font-size: var(--mantine-font-size-sm);
     font-weight: 700;
 }
+
+.selected-menu {
+    background-color: var(--mantine-color-brand-5);
+}
+
+.type-cell {
+    text-transform: capitalize;
+}

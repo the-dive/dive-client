@@ -9,12 +9,7 @@ import {
     Stack,
     Text,
 } from '@mantine/core';
-import { isDefined } from '@togglecorp/fujs';
-import {
-    MdGrid3X3,
-    MdHdrAuto,
-    MdOutlineCalendarToday,
-} from 'react-icons/md';
+import { isDefined, _cs } from '@togglecorp/fujs';
 import { useMutation, useQuery } from 'urql';
 
 import { graphql } from '#gql';
@@ -35,6 +30,7 @@ interface ListColKeyValue {
     key: keyof Column;
     label: string;
 }
+
 const listColKeyValue: ListColKeyValue[] = [
     {
         key: 'key',
@@ -42,7 +38,7 @@ const listColKeyValue: ListColKeyValue[] = [
     },
     {
         key: 'label',
-        label: 'Label',
+        label: 'Field names',
     },
     {
         key: 'type',
@@ -118,6 +114,19 @@ const workspaceTableQueryDocument = graphql(/* GraphQL */ `
     }
 `);
 
+const tableColumnOptionsQueryDocument = graphql(/* graphql */`
+    query TableColumnOptionsQuery {
+        propertiesOptions {
+            column {
+                columnTypes {
+                    key
+                    label
+                }
+            }
+        }
+    }
+`);
+
 const tableActionMutationDocument = graphql(/* graphql */`
     mutation changeTableAction(
         $id: ID!
@@ -162,6 +171,12 @@ export default function WorkTable(props: Props) {
         },
     });
 
+    const [
+        tableColumnOptions,
+    ] = useQuery({
+        query: tableColumnOptionsQueryDocument,
+    });
+
     const {
         data: workspaceTable,
     } = useMemo(() => (
@@ -187,6 +202,10 @@ export default function WorkTable(props: Props) {
             return (
                 // eslint-disable-next-line react/no-array-index-key
                 <tr key={`${tableId}-row-${rowIndex}`}>
+                    {/* eslint-disable-next-line react/no-array-index-key */}
+                    <td key={`${tableId}-row-${rowIndex}-cell-index`}>
+                        {rowIndex + 1}
+                    </td>
                     {cells}
                 </tr>
             );
@@ -197,17 +216,13 @@ export default function WorkTable(props: Props) {
         colsKeys,
     ]);
 
-    const getClickHandler = useCallback((
+    const handleMenuItemClick = useCallback((
         key: string | undefined,
-    ) => (e: React.BaseSyntheticEvent) => (
+    ) => (e: React.MouseEvent<HTMLButtonElement>) => (
         tableAction({
             id: tableId,
             key,
             type: e.currentTarget.name,
-        }).then((result) => {
-            if (result.data?.tableAction?.ok) {
-                console.log('done');
-            }
         })
     ), [
         tableAction,
@@ -217,30 +232,24 @@ export default function WorkTable(props: Props) {
     const columns = useMemo(() => (
         workspaceTable?.table?.dataColumnStats?.map((col) => (
             <th key={`${tableId}-${col?.key}`}>
-                <Menu>
+                <Menu shadow="md" withinPortal position="bottom">
                     <Menu.Target>
                         <ActionIcon className={styles.columnHeader}>
                             {col?.label}
                         </ActionIcon>
                     </Menu.Target>
-
                     <Menu.Dropdown>
-                        <Menu.Item
-                            name="number"
-                            icon={<MdGrid3X3 />}
-                            onClick={getClickHandler(col?.key)}
-                        >
-                            Number
-                        </Menu.Item>
-                        <Menu.Item
-                            name="string"
-                            icon={<MdHdrAuto />}
-                            onClick={getClickHandler(col?.key)}
-                        >
-                            String
-                        </Menu.Item>
-                        <Menu.Item icon={<MdOutlineCalendarToday />}>Date</Menu.Item>
-                        <Menu.Item>Date and Time</Menu.Item>
+                        {tableColumnOptions.data?.propertiesOptions?.column
+                            ?.columnTypes?.map((columnType) => (
+                                <Menu.Item
+                                    color={col?.type === columnType?.key ? 'brand' : 'dimmed'}
+                                    key={columnType?.key}
+                                    name={columnType?.key}
+                                    onClick={handleMenuItemClick(col?.key)}
+                                >
+                                    {columnType?.label}
+                                </Menu.Item>
+                            ))}
                     </Menu.Dropdown>
                 </Menu>
             </th>
@@ -248,7 +257,8 @@ export default function WorkTable(props: Props) {
     ), [
         workspaceTable,
         tableId,
-        getClickHandler,
+        handleMenuItemClick,
+        tableColumnOptions.data?.propertiesOptions?.column,
     ]);
 
     const card = useMemo(() => (
@@ -382,8 +392,11 @@ export default function WorkTable(props: Props) {
         workspaceTable?.table?.dataColumnStats
             ?.map((row, rowIndex: number) => {
                 const cells = listColKeys.map((key) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <td key={`${tableId}-row-${rowIndex}-list-cell-${key}`}>
+
+                    <td // eslint-disable-next-line react/no-array-index-key
+                        key={`${tableId}-row-${rowIndex}-list-cell-${key}`}
+                        className={_cs((key === 'type') && styles.typeCell)}
+                    >
                         {row && row[key]}
                     </td>
                 ));
