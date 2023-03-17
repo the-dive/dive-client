@@ -9,6 +9,7 @@ import {
     SegmentedControl,
     Flex,
     Tabs,
+    Text,
     SimpleGrid,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
@@ -105,14 +106,18 @@ export default function TableWithStatusBar(props: Props) {
                                 {opened ? <IoChevronDown /> : <IoChevronUp />}
                             </ActionIcon>
                         </Group>
+                        <Text className={styles.stats}>
+                            {`${columns?.length} columns, ${rows?.length} rows`}
+                        </Text>
                     </Tabs.List>
                     <Collapse in={opened}>
                         <Tabs.Panel className={styles.tabPanelWrapper} value="tableView" pt="xs">
                             <Paper className={styles.tabPanel}>
                                 <ScrollArea className={styles.scrollArea}>
                                     <Table striped withColumnBorders>
-                                        <thead>
+                                        <thead className={styles.tableHeading}>
                                             <tr>
+                                                <th />
                                                 {columns}
                                             </tr>
                                         </thead>

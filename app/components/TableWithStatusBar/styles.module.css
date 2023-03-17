@@ -6,6 +6,10 @@
 
     .tab {
         overflow: auto;
+
+        .stats {
+            margin-left: auto;
+        }
     }
 
     .table-status-button {
@@ -26,6 +30,12 @@
         .scroll-area {
             display: flex;
             flex-grow: 1;
+
+            .table-heading {
+                position: sticky;
+                top: 0;
+                background-color: var(--mantine-color-gray-1);
+            }
         }
     }
 }

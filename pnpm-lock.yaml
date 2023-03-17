@@ -44,7 +44,7 @@ specifiers:
   postcss-preset-env: ^8.0.1
   react: ^18.2.0
   react-dom: ^18.2.0
-  react-icons: ^4.7.1
+  react-icons: 4.8.0
   react-router-dom: ^6.4.5
   stylelint: ^14.16.0
   stylelint-config-concentric-order: ^5.1.0
@@ -75,7 +75,7 @@ dependencies:
   graphql: 16.6.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
-  react-icons: 4.7.1_react@18.2.0
+  react-icons: 4.8.0_react@18.2.0
   react-router-dom: 6.4.5_biqbaboplfbrettd7655fr4n2y
   urql: 3.0.3_onqnqwb3ubg5opvemcqf7c2qhy
   vite-plugin-imagemin: 0.6.1_vite@4.0.1
@@ -9554,8 +9554,8 @@ packages:
       scheduler: 0.23.0
     dev: false
 
-  /react-icons/4.7.1_react@18.2.0:
-    resolution: {integrity: sha512-yHd3oKGMgm7zxo3EA7H2n7vxSoiGmHk5t6Ou4bXsfcgWyhfDKMpyKfhHR6Bjnn63c+YXBLBPUql9H4wPJM6sXw==}
+  /react-icons/4.8.0_react@18.2.0:
+    resolution: {integrity: sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==}
     peerDependencies:
       react: '*'
     dependencies:

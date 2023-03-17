@@ -18,7 +18,7 @@ interface Props {
     previewData: any; // TODO get typed preview data from server
 }
 
-export default function ImportTable(props: Props) {
+export default function PreviewTable(props: Props) {
     const {
         tableId,
         previewData,
@@ -52,7 +52,7 @@ export default function ImportTable(props: Props) {
         <Paper className={styles.tableContainer} radius="md" withBorder>
             <ScrollArea className={styles.scrollArea}>
                 <Table striped withColumnBorders>
-                    <thead>
+                    <thead className={styles.tableHeading}>
                         <tr>
                             {columns}
                         </tr>

@@ -1,5 +1,6 @@
 import { useMemo, useCallback } from 'react';
 import {
+    Box,
     Button,
     Center,
     Divider,
@@ -185,18 +186,20 @@ export default function JoinModal(props: Props) {
             size="80vw"
             padding="md"
             centered
+            classNames={{ body: styles.body }}
+            className={styles.joinModal}
         >
             <Flex
-                className={styles.joinModal}
+                className={styles.formContainer}
                 direction="row"
-                gap="md"
+                gap="xs"
             >
                 <Paper
                     className={styles.joinModalForm}
                     radius="md"
                 >
                     <Flex
-                        gap="md"
+                        gap="xs"
                         direction="column"
                     >
                         <Text
@@ -209,20 +212,23 @@ export default function JoinModal(props: Props) {
                         <Divider />
                         <Paper
                             radius="md"
-                            p="md"
+                            p="xs"
                         >
                             <Flex
                                 direction="row"
                                 align="center"
                                 justify="center"
-                                gap="md"
+                                gap="xs"
                             >
-                                <Text
-                                    color="dimmed"
-                                    weight="600"
-                                >
-                                    {sourceTableColumnsResult.data?.table?.name}
-                                </Text>
+                                <Box miw="4rem">
+                                    <Text
+                                        color="dimmed"
+                                        weight="600"
+                                        style={{ wordBreak: 'unset' }}
+                                    >
+                                        {sourceTableColumnsResult.data?.table?.name}
+                                    </Text>
+                                </Box>
                                 <Image
                                     width={200}
                                     src="assets/JoinType.svg"
@@ -235,12 +241,15 @@ export default function JoinModal(props: Props) {
                                         </Text>
                                     )}
                                 />
-                                <Text
-                                    color="dimmed"
-                                    weight="600"
-                                >
-                                    {targetTableColumnsResult.data?.table?.name}
-                                </Text>
+                                <Box miw="4rem">
+                                    <Text
+                                        color="dimmed"
+                                        weight="600"
+                                        style={{ wordBreak: 'unset' }}
+                                    >
+                                        {targetTableColumnsResult.data?.table?.name}
+                                    </Text>
+                                </Box>
                             </Flex>
                         </Paper>
                         <Text
@@ -258,9 +267,9 @@ export default function JoinModal(props: Props) {
                             onReset={tableJoinForm.onReset}
                         >
                             <Flex
-                                gap="md"
+                                gap="xs"
                                 direction="row"
-                                p="xs"
+                                pb="xs"
                             >
                                 <Select
                                     label="Source Table Column"
@@ -286,9 +295,9 @@ export default function JoinModal(props: Props) {
                                 />
                             </Flex>
                             <Flex
-                                gap="md"
+                                gap="xs"
                                 direction="row"
-                                pt="md"
+                                pt="xm"
                             >
                                 <Button
                                     disabled={false}
@@ -312,7 +321,7 @@ export default function JoinModal(props: Props) {
                         </form>
                     </Flex>
                 </Paper>
-                <Flex className={styles.joinModalTable}>
+                <div className={styles.joinModalTable}>
                     {isDefined(tableJoinPreviewResult.data?.joinPreview?.result) ? (
                         <PreviewTable
                             tableId={formValues.fromTable}
@@ -325,11 +334,11 @@ export default function JoinModal(props: Props) {
                             </Text>
                         </Center>
                     )}
-                </Flex>
+                </div>
             </Flex>
             <Group
                 position="right"
-                p="md"
+                pt="xs"
             >
                 <Button
                     radius="xl"
