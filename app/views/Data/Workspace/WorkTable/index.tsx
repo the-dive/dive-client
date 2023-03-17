@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import { isDefined, _cs } from '@togglecorp/fujs';
 import { useMutation, useQuery } from 'urql';
+import { IoCheckmarkOutline } from 'react-icons/io5';
 
 import { graphql } from '#gql';
 import { WorkTableQuery } from '#gql/graphql';
@@ -246,6 +247,10 @@ export default function WorkTable(props: Props) {
                                     key={columnType?.key}
                                     name={columnType?.key}
                                     onClick={handleMenuItemClick(col?.key)}
+                                    className={_cs(col?.type === columnType?.key && styles.active)}
+                                    rightSection={(
+                                        col?.type === columnType?.key
+                                    ) && <IoCheckmarkOutline />}
                                 >
                                     {columnType?.label}
                                 </Menu.Item>

@@ -5,6 +5,12 @@
     font-weight: 700;
 }
 
+.active {
+    display: flex;
+    gap: var(--mantine-spacing-sm);
+    background-color: var(--mantine-color-indigo-1);
+}
+
 .selected-menu {
     background-color: var(--mantine-color-brand-5);
 }
