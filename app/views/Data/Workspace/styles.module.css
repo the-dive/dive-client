@@ -13,7 +13,6 @@
         align-content: flex-start;
         padding: var(--mantine-spacing-xl);
 
-
         .workspace-item {
             display: flex;
             border: 1px solid transparent;

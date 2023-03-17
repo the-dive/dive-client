@@ -186,6 +186,7 @@ export default function JoinModal(props: Props) {
             size="80vw"
             padding="md"
             centered
+            classNames={{ body: styles.body }}
             className={styles.joinModal}
         >
             <Flex
