@@ -19,7 +19,8 @@
         }
 
         .active {
-            border: 1px solid var(--mantine-color-brand-5);
+            border: 2px solid var(--mantine-color-brand-5);
+            border-radius: 5px;
         }
     }
 }

@@ -12,7 +12,12 @@ import {
 import { isDefined, _cs } from '@togglecorp/fujs';
 import { useMutation, useQuery } from 'urql';
 import { IoCheckmarkOutline } from 'react-icons/io5';
-
+import {
+    MdOutlineCalendarToday,
+    MdHdrAuto,
+    MdDateRange,
+    MdOutlineGrid3X3,
+} from 'react-icons/md';
 import { graphql } from '#gql';
 import { WorkTableQuery } from '#gql/graphql';
 import TableWithStatusBar from '#components/TableWithStatusBar';
@@ -86,6 +91,13 @@ const listColKeyValue: ListColKeyValue[] = [
         label: 'Standard deviation',
     },
 ];
+
+const columnIcon: Record<string, React.ReactElement> = {
+    number: <MdOutlineGrid3X3 />,
+    string: <MdHdrAuto />,
+    date: <MdOutlineCalendarToday />,
+    datetime: <MdDateRange />,
+};
 
 const workspaceTableQueryDocument = graphql(/* GraphQL */ `
     query workTable($id: ID!) {
@@ -230,6 +242,11 @@ export default function WorkTable(props: Props) {
         tableId,
     ]);
 
+    const columnTypeOption = useMemo(() => (
+        tableColumnOptions.data?.propertiesOptions?.column?.columnTypes?.filter((type) => (
+            type?.key !== 'gender' && type?.key !== 'url' && type?.key !== 'geo_area'
+        ))), [tableColumnOptions.data?.propertiesOptions?.column?.columnTypes]);
+
     const columns = useMemo(() => (
         workspaceTable?.table?.dataColumnStats?.map((col) => (
             <th key={`${tableId}-${col?.key}`}>
@@ -240,21 +257,24 @@ export default function WorkTable(props: Props) {
                         </ActionIcon>
                     </Menu.Target>
                     <Menu.Dropdown>
-                        {tableColumnOptions.data?.propertiesOptions?.column
-                            ?.columnTypes?.map((columnType) => (
-                                <Menu.Item
-                                    color={col?.type === columnType?.key ? 'brand' : 'dimmed'}
-                                    key={columnType?.key}
-                                    name={columnType?.key}
-                                    onClick={handleMenuItemClick(col?.key)}
-                                    className={_cs(col?.type === columnType?.key && styles.active)}
-                                    rightSection={(
-                                        col?.type === columnType?.key
-                                    ) && <IoCheckmarkOutline />}
-                                >
-                                    {columnType?.label}
-                                </Menu.Item>
-                            ))}
+                        {columnTypeOption?.map((columnType) => (
+                            <Menu.Item
+                                color={col?.type === columnType?.key ? 'brand' : 'dimmed'}
+                                key={columnType?.key}
+                                name={columnType?.key}
+                                icon={columnType?.key ? (columnIcon[columnType.key]) : null}
+                                onClick={handleMenuItemClick(col?.key)}
+                                className={_cs(
+                                    styles.menuItem,
+                                    col?.type === columnType?.key && styles.active,
+                                )}
+                                rightSection={(
+                                    col?.type === columnType?.key
+                                ) && <IoCheckmarkOutline />}
+                            >
+                                {columnType?.label}
+                            </Menu.Item>
+                        ))}
                     </Menu.Dropdown>
                 </Menu>
             </th>
@@ -263,7 +283,7 @@ export default function WorkTable(props: Props) {
         workspaceTable,
         tableId,
         handleMenuItemClick,
-        tableColumnOptions.data?.propertiesOptions?.column,
+        columnTypeOption,
     ]);
 
     const card = useMemo(() => (

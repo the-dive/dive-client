@@ -214,7 +214,7 @@ function WorkspaceItem(props: WorkspaceItemProps) {
             {!isRenameClicked && (
                 <Menu
                     width={130}
-                    shadow="md"
+                    shadow="xl"
                     withinPortal
                     disabled={removeTableFromWorkspaceResult.fetching || isRenameClicked}
                 >

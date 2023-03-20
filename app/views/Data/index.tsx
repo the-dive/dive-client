@@ -18,6 +18,7 @@ import {
     MdAdd,
     MdOutlineSearch,
     MdOutlineTableChart,
+    MdCircle,
 } from 'react-icons/md';
 import { graphql } from '#gql';
 
@@ -141,6 +142,15 @@ export default function Data() {
                                     key={table.id}
                                     icon={<MdOutlineTableChart />}
                                     label={table.name}
+                                    rightSection={
+                                        table.isAddedToWorkspace
+                                            ? (
+                                                <MdCircle
+                                                    size={8}
+                                                />
+                                            )
+                                            : null
+                                    }
                                     disabled={table.isAddedToWorkspace}
                                     onClick={() => handleTableClick(table.id)}
                                     variant="subtle"
