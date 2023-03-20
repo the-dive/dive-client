@@ -13,6 +13,7 @@ import {
 import { useMutation } from 'urql';
 
 import { graphql } from '#gql';
+import { _cs } from '@togglecorp/fujs';
 
 import styles from './styles.module.css';
 
@@ -104,7 +105,10 @@ export default function UploadModal(props: Props) {
                 >
                     {({ onClick }) => (
                         <Paper
-                            className={styles.paper}
+                            className={_cs(
+                                styles.paper,
+                                styles.buttonDisable,
+                            )}
                             withBorder
                             onClick={onClick}
                         >
@@ -140,7 +144,10 @@ export default function UploadModal(props: Props) {
                 >
                     {({ onClick }) => (
                         <Paper
-                            className={styles.paper}
+                            className={_cs(
+                                styles.paper,
+                                styles.buttonDisable,
+                            )}
                             withBorder
                             onClick={onClick}
                         >
@@ -158,7 +165,10 @@ export default function UploadModal(props: Props) {
                 >
                     {({ onClick }) => (
                         <Paper
-                            className={styles.paper}
+                            className={_cs(
+                                styles.paper,
+                                styles.buttonDisable,
+                            )}
                             withBorder
                             onClick={onClick}
                         >
@@ -176,7 +186,10 @@ export default function UploadModal(props: Props) {
                 >
                     {({ onClick }) => (
                         <Paper
-                            className={styles.paper}
+                            className={_cs(
+                                styles.paper,
+                                styles.buttonDisable,
+                            )}
                             withBorder
                             onClick={onClick}
                         >
@@ -194,7 +207,10 @@ export default function UploadModal(props: Props) {
                 >
                     {({ onClick }) => (
                         <Paper
-                            className={styles.paper}
+                            className={_cs(
+                                styles.paper,
+                                styles.buttonDisable,
+                            )}
                             withBorder
                             onClick={onClick}
                         >

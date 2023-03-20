@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import {
     ActionIcon,
-    Group,
     Paper,
     Table,
     ScrollArea,
@@ -18,10 +17,6 @@ import {
     MdOutlineTableChart,
     MdList,
     MdOutlineGridView,
-    MdOutlineTag,
-    MdOutlineLanguage,
-    MdOutlineCalendarToday,
-    MdOutlineLocationOn,
 } from 'react-icons/md';
 import { _cs } from '@togglecorp/fujs';
 
@@ -68,6 +63,7 @@ export default function TableWithStatusBar(props: Props) {
                         <Tabs.Tab value="tableView" icon={<MdOutlineTableChart size={14} />} />
                         <Tabs.Tab value="listView" icon={<MdList size={14} />} />
                         <Tabs.Tab value="gridView" icon={<MdOutlineGridView size={14} />} />
+                        {/* NOTE: Add these component after implementation of columns type count
                         <Group>
                             <ActionIcon
                                 variant="transparent"
@@ -97,15 +93,15 @@ export default function TableWithStatusBar(props: Props) {
                                 1
                                 <MdOutlineLocationOn />
                             </ActionIcon>
-                            <ActionIcon
-                                color="dark"
-                                size="md"
-                                variant="transparent"
-                                onClick={handleCollapseClick}
-                            >
-                                {opened ? <IoChevronDown /> : <IoChevronUp />}
-                            </ActionIcon>
-                        </Group>
+                        </Group> */}
+                        <ActionIcon
+                            color="dark"
+                            size="md"
+                            variant="transparent"
+                            onClick={handleCollapseClick}
+                        >
+                            {opened ? <IoChevronDown /> : <IoChevronUp />}
+                        </ActionIcon>
                         <Text className={styles.stats}>
                             {`${columns?.length} columns, ${rows?.length} rows`}
                         </Text>

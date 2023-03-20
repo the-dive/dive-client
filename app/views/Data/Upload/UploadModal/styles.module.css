@@ -1,3 +1,7 @@
 .paper {
     cursor: pointer;
 }
+
+.button-disable {
+    opacity: 50%;
+}
