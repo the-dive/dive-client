@@ -23,7 +23,7 @@ import { graphql } from '#gql';
 import SetRelationshipModal, { TableRelationshipFormType } from './SetRelationshipModal';
 import JoinModal from './JoinModal';
 import ImportTable from './ImportTable';
-import WorkTable from './WorkTable';
+import DataOverview from './DataOverview';
 import styles from './styles.module.css';
 
 interface Props {
@@ -360,7 +360,7 @@ export default function Workspace(props: Props) {
             {(!tableToImportId && activeTableId) && (
                 <>
                     <Divider />
-                    <WorkTable
+                    <DataOverview
                         tableId={activeTableId}
                     />
                 </>
