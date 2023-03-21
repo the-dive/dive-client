@@ -3,6 +3,7 @@
     overflow: auto;
 
     .body {
+        overflow: auto;
         word-break: unset;
 
         .form-container {
@@ -22,7 +23,11 @@
 
             .join-modal-table {
                 display: flex;
-                max-height: 60vh;
+                position: relative;
+                flex-basis: 70%;
+                flex-grow: 1;
+                justify-content: flex-start;
+                max-height: 65vh;
                 overflow: auto;
 
                 .text {

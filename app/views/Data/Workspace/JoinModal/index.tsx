@@ -6,6 +6,7 @@ import {
     Divider,
     Flex,
     Group,
+    LoadingOverlay,
     Image,
     Modal,
     Paper,
@@ -92,7 +93,7 @@ export default function JoinModal(props: Props) {
     ] = useMutation(tableJoinPreviewMutationDocument);
 
     const [
-        ,
+        tableJoinResult,
         tableJoin,
     ] = useMutation(tableJoinMutationDocument);
 
@@ -300,7 +301,7 @@ export default function JoinModal(props: Props) {
                                 pt="xm"
                             >
                                 <Button
-                                    disabled={false}
+                                    disabled={tableJoinPreviewResult.fetching}
                                     type="reset"
                                     radius="xl"
                                     variant="default"
@@ -309,7 +310,7 @@ export default function JoinModal(props: Props) {
                                     Reset
                                 </Button>
                                 <Button
-                                    disabled={false}
+                                    disabled={tableJoinPreviewResult.fetching}
                                     type="submit"
                                     radius="xl"
                                     variant="light"
@@ -322,6 +323,7 @@ export default function JoinModal(props: Props) {
                     </Flex>
                 </Paper>
                 <div className={styles.joinModalTable}>
+                    <LoadingOverlay visible={tableJoinPreviewResult.fetching} />
                     {isDefined(tableJoinPreviewResult.data?.joinPreview?.result) ? (
                         <PreviewTable
                             tableId={formValues.fromTable}
@@ -329,7 +331,7 @@ export default function JoinModal(props: Props) {
                         />
                     ) : (
                         <Center className={styles.text}>
-                            <Text fz="md" weight={600}>
+                            <Text fz="md" weight={600} hidden={tableJoinPreviewResult.fetching}>
                                 Apply table join clauses to preview
                             </Text>
                         </Center>
@@ -341,6 +343,7 @@ export default function JoinModal(props: Props) {
                 pt="xs"
             >
                 <Button
+                    disabled={tableJoinResult.fetching}
                     radius="xl"
                     variant="default"
                     onClick={onClose}
@@ -349,6 +352,7 @@ export default function JoinModal(props: Props) {
                     Cancel
                 </Button>
                 <Button
+                    disabled={tableJoinResult.fetching}
                     radius="xl"
                     variant="light"
                     uppercase

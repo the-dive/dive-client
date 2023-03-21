@@ -4,6 +4,7 @@ import {
     Card,
     Divider,
     Group,
+    LoadingOverlay,
     Menu,
     Paper,
     Stack,
@@ -164,7 +165,7 @@ const tableActionMutationDocument = graphql(/* graphql */`
     }
 `);
 
-export default function WorkTable(props: Props) {
+export default function DataOverview(props: Props) {
     const {
         tableId,
         className,
@@ -190,21 +191,17 @@ export default function WorkTable(props: Props) {
         query: tableColumnOptionsQueryDocument,
     });
 
-    const {
-        data: workspaceTable,
-    } = useMemo(() => (
-        workspaceTableResult
-    ), [workspaceTableResult]);
+    const { data, fetching } = workspaceTableResult;
 
     const colsKeys = useMemo(() => (
-        workspaceTable?.table?.dataColumnStats
+        data?.table?.dataColumnStats
             ?.map((stats) => stats?.key).filter(isDefined)
     ), [
-        workspaceTable,
+        data,
     ]);
 
     const rows = useMemo(() => (
-        workspaceTable?.table?.dataRows.map((row: Row, rowIndex: number) => {
+        data?.table?.dataRows.map((row: Row, rowIndex: number) => {
             const cells = colsKeys?.map((key) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <td key={`${tableId}-row-${rowIndex}-cell-${key}`}>
@@ -224,7 +221,7 @@ export default function WorkTable(props: Props) {
             );
         })
     ), [
-        workspaceTable,
+        data,
         tableId,
         colsKeys,
     ]);
@@ -248,7 +245,7 @@ export default function WorkTable(props: Props) {
         ))), [tableColumnOptions.data?.propertiesOptions?.column?.columnTypes]);
 
     const columns = useMemo(() => (
-        workspaceTable?.table?.dataColumnStats?.map((col) => (
+        data?.table?.dataColumnStats?.map((col) => (
             <th key={`${tableId}-${col?.key}`}>
                 <Menu shadow="md" withinPortal position="bottom">
                     <Menu.Target>
@@ -280,14 +277,14 @@ export default function WorkTable(props: Props) {
             </th>
         ))
     ), [
-        workspaceTable,
+        data,
         tableId,
         handleMenuItemClick,
         columnTypeOption,
     ]);
 
     const card = useMemo(() => (
-        workspaceTable?.table?.dataColumnStats?.map((stats) => (
+        data?.table?.dataColumnStats?.map((stats) => (
             <Card shadow="sm" p="sm" radius="sm" withBorder key={stats?.key}>
                 <Stack>
                     <Text size="lg" weight={600}>{stats?.label}</Text>
@@ -407,14 +404,14 @@ export default function WorkTable(props: Props) {
                 </Stack>
             </Card>
         ))
-    ), [workspaceTable]);
+    ), [data]);
 
     const listColKeys = useMemo(() => (
         listColKeyValue.map((col) => (col.key))
     ), []);
 
     const listRows = useMemo(() => (
-        workspaceTable?.table?.dataColumnStats
+        data?.table?.dataColumnStats
             ?.map((row, rowIndex: number) => {
                 const cells = listColKeys.map((key) => (
 
@@ -433,7 +430,7 @@ export default function WorkTable(props: Props) {
                 );
             })
     ), [
-        workspaceTable,
+        data,
         listColKeys,
         tableId,
     ]);
@@ -447,6 +444,12 @@ export default function WorkTable(props: Props) {
     ), [
         tableId,
     ]);
+
+    if (fetching) {
+        return (
+            <LoadingOverlay visible={fetching} />
+        );
+    }
 
     return (
         <TableWithStatusBar
