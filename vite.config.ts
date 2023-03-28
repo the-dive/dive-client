@@ -86,6 +86,10 @@ export default defineConfig(({ mode }) => ({
         }),
         react(),
     ],
+    define: {
+        'import.meta.env.VITE_APP_NAME': JSON.stringify(process.env.name),
+        'import.meta.env.VITE_APP_VERSION': JSON.stringify(process.env.npm_package_version),
+    },
     // https://github.com/vitest-dev/vitest
     test: {
         include: ['src/**/*.test.ts'],
