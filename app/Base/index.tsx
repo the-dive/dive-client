@@ -14,7 +14,6 @@ import {
     Provider,
 } from 'urql';
 import { multipartFetchExchange } from '@urql/exchange-multipart-fetch';
-import { devtoolsExchange } from '@urql/devtools';
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
 
@@ -76,7 +75,7 @@ const router = sentryCreateBrowserRouter([
 
 const client = createClient({
     url: import.meta.env.VITE_GRAPHQL_API_ENDPOINT,
-    exchanges: [devtoolsExchange, dedupExchange, cacheExchange, multipartFetchExchange],
+    exchanges: [dedupExchange, cacheExchange, multipartFetchExchange],
 });
 
 function Base() {
