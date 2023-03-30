@@ -10,6 +10,8 @@ Create a `.env.local` file and copy all values from `.env.example` and add all n
 ```
 VITE_GRAPHQL_API_ENDPOINT=http://localhost:8000/graphql/
 VITE_GRAPHQL_CODEGEN_ENDPOINT=http://localhost:8000/graphql/
+VITE_SENTRY_DSN=https://9a60f35c6a1c45fe999727c5f6f7229c@o158798.ingest.sentry.io/1220157,
+VITE_SENTRY_TRACES_SAMPLE_RATE=1
 ```
 
 ```bash
