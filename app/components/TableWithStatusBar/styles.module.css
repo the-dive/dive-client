@@ -6,10 +6,11 @@
 
     .tab {
         overflow: auto;
-
-        .stats {
-            margin-left: auto;
+        .tab-list {
+            display: flex;
+            justify-content: space-between;
         }
+
     }
 
     .table-status-button {

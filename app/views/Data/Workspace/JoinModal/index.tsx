@@ -184,7 +184,7 @@ export default function JoinModal(props: Props) {
                 </Title>
             )}
             radius="md"
-            size="80vw"
+            size="95vw"
             padding="md"
             centered
             classNames={{ body: styles.body }}
