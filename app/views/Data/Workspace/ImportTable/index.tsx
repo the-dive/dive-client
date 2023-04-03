@@ -122,14 +122,34 @@ export default function ImportTable(props: Props) {
         <Paper className={styles.import}>
             <div className={styles.heading}>
                 <Title order={3}>{data?.table?.name}</Title>
-                <ActionIcon
-                    color="dark"
-                    size="md"
-                    variant="transparent"
-                    onClick={handleCollapseClick}
-                >
-                    {opened ? <IoChevronUp /> : <IoChevronDown />}
-                </ActionIcon>
+                <Group className={styles.importActions} position="right">
+                    <Button
+                        radius="xl"
+                        variant="default"
+                        uppercase
+                        disabled={addTableToWorkspaceResult.fetching}
+                        onClick={onCancel}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        radius="xl"
+                        variant="light"
+                        uppercase
+                        disabled={addTableToWorkspaceResult.fetching}
+                        onClick={handleImportClick}
+                    >
+                        Import
+                    </Button>
+                    <ActionIcon
+                        color="dark"
+                        size="md"
+                        variant="transparent"
+                        onClick={handleCollapseClick}
+                    >
+                        {opened ? <IoChevronUp /> : <IoChevronDown />}
+                    </ActionIcon>
+                </Group>
             </div>
             <Collapse in={opened} className={styles.collapse}>
                 <div className={styles.content}>
@@ -157,26 +177,6 @@ export default function ImportTable(props: Props) {
                         </div>
                     )}
                 </div>
-                <Group className={styles.importActions} position="right">
-                    <Button
-                        radius="xl"
-                        variant="default"
-                        uppercase
-                        disabled={addTableToWorkspaceResult.fetching}
-                        onClick={onCancel}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        radius="xl"
-                        variant="light"
-                        uppercase
-                        disabled={addTableToWorkspaceResult.fetching}
-                        onClick={handleImportClick}
-                    >
-                        Import
-                    </Button>
-                </Group>
             </Collapse>
         </Paper>
     );
