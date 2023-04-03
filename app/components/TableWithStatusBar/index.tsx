@@ -5,7 +5,6 @@ import {
     Table,
     ScrollArea,
     Collapse,
-    SegmentedControl,
     Tabs,
     Text,
     SimpleGrid,
@@ -102,15 +101,12 @@ export default function TableWithStatusBar(props: Props) {
                             </ActionIcon>
                         </Group> */}
                         {activeTab === 'listView' && (
-                            <SegmentedControl
-                                radius="lg"
-                                color="brand"
-                                size="xs"
-                                data={[
-                                    { value: 'summary_stats', label: 'Summary stats' },
-                                    { value: 'framework_setup', label: 'Framework setup', disabled: true },
-                                ]}
-                            />
+                            <Tabs>
+                                <Tabs.List defaultValue="first">
+                                    <Tabs.Tab value="first">Summary Stats</Tabs.Tab>
+                                    <Tabs.Tab disabled value="second">Framework Setup</Tabs.Tab>
+                                </Tabs.List>
+                            </Tabs>
                         )}
                         <Group>
                             <Text className={styles.stats}>
