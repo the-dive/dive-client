@@ -1,15 +1,14 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
     ActionIcon,
     Paper,
     Table,
     ScrollArea,
     Collapse,
-    SegmentedControl,
-    Flex,
     Tabs,
     Text,
     SimpleGrid,
+    Group,
 } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
@@ -40,7 +39,9 @@ export default function TableWithStatusBar(props: Props) {
         rows,
         card,
     } = props;
+
     const [opened, toggleOpened] = useToggle([true, false]);
+    const [activeTab, setActiveTab] = useState<string | null>('tableView');
 
     const handleCollapseClick = useCallback(() => {
         toggleOpened();
@@ -56,13 +57,18 @@ export default function TableWithStatusBar(props: Props) {
             >
                 <Tabs
                     variant="pills"
-                    defaultValue="tableView"
+                    value={activeTab}
+                    onTabChange={setActiveTab}
                     className={styles.tab}
                 >
-                    <Tabs.List>
-                        <Tabs.Tab value="tableView" icon={<MdOutlineTableChart size={14} />} />
-                        <Tabs.Tab value="listView" icon={<MdList size={14} />} />
-                        <Tabs.Tab value="gridView" icon={<MdOutlineGridView size={14} />} />
+                    <Tabs.List
+                        className={styles.tabList}
+                    >
+                        <Group>
+                            <Tabs.Tab value="tableView" icon={<MdOutlineTableChart size={14} />} />
+                            <Tabs.Tab value="listView" icon={<MdList size={14} />} />
+                            <Tabs.Tab value="gridView" icon={<MdOutlineGridView size={14} />} />
+                        </Group>
                         {/* NOTE: Add these component after implementation of columns type count
                         <Group>
                             <ActionIcon
@@ -94,17 +100,27 @@ export default function TableWithStatusBar(props: Props) {
                                 <MdOutlineLocationOn />
                             </ActionIcon>
                         </Group> */}
-                        <ActionIcon
-                            color="dark"
-                            size="md"
-                            variant="transparent"
-                            onClick={handleCollapseClick}
-                        >
-                            {opened ? <IoChevronDown /> : <IoChevronUp />}
-                        </ActionIcon>
-                        <Text className={styles.stats}>
-                            {`${columns?.length} columns, ${rows?.length} rows`}
-                        </Text>
+                        {activeTab === 'listView' && (
+                            <Tabs>
+                                <Tabs.List defaultValue="first">
+                                    <Tabs.Tab value="first">Summary Stats</Tabs.Tab>
+                                    <Tabs.Tab disabled value="second">Framework Setup</Tabs.Tab>
+                                </Tabs.List>
+                            </Tabs>
+                        )}
+                        <Group>
+                            <Text className={styles.stats}>
+                                {`${columns?.length} columns, ${rows?.length} rows`}
+                            </Text>
+                            <ActionIcon
+                                color="dark"
+                                size="md"
+                                variant="transparent"
+                                onClick={handleCollapseClick}
+                            >
+                                {opened ? <IoChevronDown /> : <IoChevronUp />}
+                            </ActionIcon>
+                        </Group>
                     </Tabs.List>
                     <Collapse in={opened}>
                         <Tabs.Panel className={styles.tabPanelWrapper} value="tableView" pt="xs">
@@ -127,19 +143,6 @@ export default function TableWithStatusBar(props: Props) {
                         <Tabs.Panel className={styles.tabPanelWrapper} value="listView" pt="xs">
                             <Paper className={styles.tabPanel}>
                                 <ScrollArea className={styles.scrollArea}>
-                                    <Flex
-                                        justify="center"
-                                        p="sm"
-                                    >
-                                        <SegmentedControl
-                                            radius="lg"
-                                            color="brand"
-                                            data={[
-                                                { value: 'summary_stats', label: 'Summary stats' },
-                                                { value: 'framework_setup', label: 'Framework setup', disabled: true },
-                                            ]}
-                                        />
-                                    </Flex>
                                     <Table striped withColumnBorders>
                                         <thead>
                                             <tr>
