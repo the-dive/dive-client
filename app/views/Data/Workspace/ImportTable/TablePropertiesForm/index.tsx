@@ -177,7 +177,7 @@ export default function TablePropertiesForm(props: Props) {
                     onReset={handleFormReset}
                 >
                     <Select
-                        label="Header Levels"
+                        label="Header Rows"
                         data={options?.headerLevels as SelectItem[]} // TODO: fix types in server
                         rightSection={<IoChevronDown className={styles.icon} />}
                         styles={{ rightSection: { pointerEvents: 'none' } }}
