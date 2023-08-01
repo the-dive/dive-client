@@ -37,7 +37,7 @@ specifiers:
   eslint-plugin-react-hooks: ^4.6.0
   graphql: ^16.6.0
   husky: ^8.0.3
-  pnpm: ^7.30.3
+  pnpm: ^7.33.4
   postcss: ^8.4.21
   postcss-nested: ^6.0.1
   postcss-normalize: ^10.0.1
@@ -105,7 +105,7 @@ devDependencies:
   eslint-plugin-react: 7.32.2_eslint@8.36.0
   eslint-plugin-react-hooks: 4.6.0_eslint@8.36.0
   husky: 8.0.3
-  pnpm: 7.30.3
+  pnpm: 7.33.4
   postcss: 8.4.21
   postcss-nested: 6.0.1_postcss@8.4.21
   postcss-normalize: 10.0.1_jrpp4geoaqu5dz2gragkckznb4
@@ -7395,8 +7395,8 @@ packages:
       pathe: 1.1.0
     dev: true
 
-  /pnpm/7.30.3:
-    resolution: {integrity: sha512-Z/pNEfZF45OwdZSUAeSTYySs27UW+GG4AQ2iXz4u127QVtkCMCeyrMNZmb/17BazaZTtvXqk/+jxTVkyh8apIA==}
+  /pnpm/7.33.4:
+    resolution: {integrity: sha512-xEbf/tkwHpGM/GXq5U/sDSiE6ykLPho+o71PHNRWqkVLm6dJe4G/5Pg619Ow32ovekrr7pii5qtfamujB/+1bA==}
     engines: {node: '>=14.6'}
     hasBin: true
     dev: true
