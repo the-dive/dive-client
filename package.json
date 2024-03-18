@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "packageManager": "pnpm@7.12.1",
+  "packageManager": "pnpm@8.15.5",
   "scripts": {
     "dev": "pnpm codegen && vite",
     "build": "pnpm codegen && tsc && vite build",
