@@ -78,6 +78,6 @@
     "vite-plugin-pwa": "^0.14.6",
     "vite-plugin-svgr": "^2.4.0",
     "vite-tsconfig-paths": "^4.0.7",
-    "vitest": "^0.29.7"
+    "vitest": "^3.0.0"
   }
 }
